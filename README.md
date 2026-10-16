@@ -16,7 +16,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Superpopulation calls use `snps.predict_ancestry` when available. The older `ezancestry` package pins `pandas<2` and conflicts with Streamlit, so it is an optional extra (`pip install -e ".[ancestry]"`) best used in a separate environment.
+Superpopulation calls use a bundled AIM allele-frequency likelihood by default (no extra install). Optional `ezancestry` via `pip install -e ".[ancestry]"` needs Python <3.12 and pandas 1.x, so use a separate 3.10/3.11 env if you want that path.
 
 Place your 23andMe raw exports as `data/*.txt` (already gitignored). The app lists those files and defaults the primary sample to the Saeid Hosseinipoor v5 export when present.
 
@@ -55,6 +55,7 @@ Tests use tiny synthetic genotype files only — never the private genomes under
 
 - [`snps`](https://github.com/apriha/snps) — load 23andMe files
 - [`lineage`](https://github.com/apriha/lineage) — shared segments / relatedness
-- Optional `genolens[ancestry]` (`snps[ezancestry]`) — 1000 Genomes superpopulation call. Not in the default install: ezancestry pins pandas 1.x and conflicts with Streamlit on Python 3.9.
+- Bundled AIM panel — default 1000 Genomes superpopulation likelihood (no ezancestry)
+- Optional `genolens[ancestry]` (`ezancestry`) — alternate `snps.predict_ancestry` path; Python <3.12 + pandas 1.x only
 - `scikit-learn` — PCA projection for ancient affinity
 - Streamlit — local UI

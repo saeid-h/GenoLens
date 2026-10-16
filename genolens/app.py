@@ -21,7 +21,13 @@ from genolens.health import load_panel, match_health
 from genolens.ingest import load_genome
 from genolens.paths import DATA_DIR, default_primary, list_sample_files, sample_label
 from genolens.reference import build_demo_panel, ensure_panel, panel_ready
-from genolens.relatedness import compare_pair, relatedness_matrix
+from genolens.relatedness import (
+    compare_all_pairs,
+    compare_pair,
+    infer_pedigree,
+    pedigree_plotly_figure,
+    relatedness_matrix_from_pairs,
+)
 
 DISCLAIMER = (
     "**Exploratory only.** Not medical advice, not a clinical diagnosis, and not proof of "
@@ -122,16 +128,21 @@ def page_compare(path: Path) -> None:
             _show_pair(result)
         return
 
-    with st.spinner("Computing relatedness matrix (can take a few minutes)…"):
+    labels = [sample_label(p) for p in samples]
+    paths_by_label = {sample_label(p): p for p in samples}
+    pairs = None
+    with st.spinner("Computing relatedness for all pairs (can take a few minutes)…"):
         try:
-            matrix = relatedness_matrix(samples)
+            pairs = compare_all_pairs(samples)
+            matrix = relatedness_matrix_from_pairs(pairs, labels)
             st.subheader("Shared cM matrix")
             st.dataframe(matrix.style.format("{:.1f}", na_rep="—"), use_container_width=True)
         except Exception as exc:  # noqa: BLE001
             st.error(f"Matrix failed: {exc}")
 
-    labels = [sample_label(p) for p in samples]
-    paths_by_label = {sample_label(p): p for p in samples}
+    if pairs:
+        _show_family_tree(samples, labels, pairs)
+
     primary_label = sample_label(path) if path in samples else labels[0]
     a = st.selectbox("Sample A", labels, index=labels.index(primary_label) if primary_label in labels else 0)
     b_options = [x for x in labels if x != a]
@@ -140,6 +151,44 @@ def page_compare(path: Path) -> None:
         with st.spinner("Comparing pair…"):
             result = compare_pair(paths_by_label[a], paths_by_label[b])
             _show_pair(result)
+
+
+def _show_family_tree(samples: list[Path], labels: list[str], pairs) -> None:
+    st.subheader("Family tree")
+    st.caption(
+        "Best-effort nuclear pedigree from parent/child (~3400+ cM) and sibling "
+        "(~2200–3400 cM) bands. Autosomal shared cM is symmetric — orientation uses "
+        "sibling structure and SNP-derived sex for Mother/Father when known."
+    )
+    sex_by_label: dict[str, str | None] = {}
+    for p, lab in zip(samples, labels):
+        try:
+            sex_by_label[lab] = _cached_genome(str(p)).sex
+        except Exception:  # noqa: BLE001
+            sex_by_label[lab] = None
+
+    estimate = infer_pedigree(pairs, sex_by_label=sex_by_label, labels=labels)
+    st.plotly_chart(pedigree_plotly_figure(estimate), use_container_width=True)
+    if estimate.ascii_tree:
+        st.code(estimate.ascii_tree, language=None)
+    edge_rows = [
+        {
+            "from": e.source,
+            "to": e.target,
+            "kind": e.kind,
+            "shared_cM": round(e.shared_cm, 1),
+            "relationship": e.relationship,
+            "directed": e.directed,
+            "confidence": e.confidence,
+            "note": e.note,
+        }
+        for e in estimate.edges
+        if e.kind in {"parent_child", "sibling", "close_relative"}
+    ]
+    if edge_rows:
+        st.dataframe(pd.DataFrame(edge_rows), use_container_width=True, hide_index=True)
+    for note in estimate.notes:
+        st.caption(f"Note: {note}")
 
 
 def _show_pair(result) -> None:
@@ -162,23 +211,67 @@ def page_ancestry(path: Path) -> None:
     st.header("Ancestry & haplogroups")
     summary = _cached_genome(str(path))
 
-    st.subheader("Superpopulation (ezancestry)")
+    st.subheader("Continental / superpopulation affinity")
+    st.info(
+        "These labels are **broad continental / 1000 Genomes superpopulation groups** "
+        "(African, Admixed American, East Asian, European, South Asian) — not countries "
+        "or ethnicities. "
+        "The AIM likelihood method scores overlap with ancestry-informative markers "
+        "against reference allele frequencies; it indicates genetic affinity at that "
+        "coarse scale only."
+    )
     with st.spinner("Predicting ancestry…"):
         anc = predict_ancestry(summary.snps)
-    if anc.error:
-        st.warning(anc.note)
-        st.caption(anc.error)
+    st.caption(anc.method_summary)
+    if anc.superpopulation:
+        call_label = anc.label_for(anc.superpopulation)
+        st.write(
+            f"**Call:** {call_label}  "
+            f"({anc.method}"
+            + (f", {anc.markers_used} AIMs" if anc.markers_used else "")
+            + ")"
+        )
     else:
-        st.write(f"**Call:** {anc.superpopulation or '—'}  ({anc.method})")
-        st.caption(anc.note)
-        if anc.populations:
-            st.dataframe(
-                pd.DataFrame(
-                    [{"population": k, "score": v} for k, v in sorted(anc.populations.items(), key=lambda x: -x[1])]
-                ),
-                use_container_width=True,
-                hide_index=True,
-            )
+        st.info("No superpopulation call for this file.")
+    st.caption(anc.note)
+    if anc.error:
+        st.caption(f"Detail: {anc.error}")
+    if anc.populations:
+        ranked = anc.ranked_percentages()
+        summary_bits = [
+            f"{anc.label_for(code)} {pct:.0f}%"
+            for code, pct in ranked
+            if pct >= 0.5
+        ]
+        if summary_bits:
+            st.write(" · ".join(summary_bits))
+        pct_df = pd.DataFrame(
+            [
+                {
+                    "superpopulation": anc.label_for(code),
+                    "percent": pct,
+                }
+                for code, pct in ranked
+            ]
+        )
+        st.dataframe(
+            pct_df,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                "superpopulation": "Superpopulation",
+                "percent": st.column_config.NumberColumn("Affinity %", format="%.1f%%"),
+            },
+        )
+        fig = px.bar(
+            pct_df,
+            x="superpopulation",
+            y="percent",
+            labels={"superpopulation": "", "percent": "Affinity %"},
+            title="Normalized AIM affinity (sums to ~100%)",
+        )
+        fig.update_layout(yaxis_range=[0, max(100, float(pct_df["percent"].max()) + 5)])
+        st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("Haplogroups (shallow microarray tree)")
     calls = call_haplogroups(summary.snps)

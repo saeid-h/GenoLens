@@ -102,4 +102,14 @@ def call_haplogroups(snps: SNPs, tree: dict[str, Any] | None = None) -> dict[str
     y_call.lineage = "Y"
     mt_call = _call_branch(tree.get("mt", []), genotypes)
     mt_call.lineage = "mt"
+
+    # Females (and some chips) have no Y calls — make that explicit in the UI.
+    sex = None
+    try:
+        sex = snps.determine_sex() if hasattr(snps, "determine_sex") else getattr(snps, "sex", None)
+    except Exception:  # noqa: BLE001
+        sex = getattr(snps, "sex", None)
+    if y_call.markers_called == 0 and str(sex).lower() in {"female", "f"}:
+        y_call.note = "No Y markers called (expected for female samples)."
+
     return {"Y": y_call, "mt": mt_call}
