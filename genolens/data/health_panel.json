@@ -1,0 +1,518 @@
+{
+  "disclaimer": "Exploratory trait and pharmacogenetic markers only. Not medical advice. Microarray data covers a tiny fraction of the genome.",
+  "markers": [
+    {
+      "rsid": "rs1801133",
+      "gene": "MTHFR",
+      "category": "metabolism",
+      "summary": "Folate metabolism variant commonly discussed as C677T.",
+      "notes": {
+        "GG": "Common genotype at this site.",
+        "AG": "One copy of the T (A-coding) allele.",
+        "AA": "Two copies of the T (A-coding) allele.",
+        "CC": "Common genotype at this site (plus-strand C).",
+        "CT": "One copy of the T allele.",
+        "TT": "Two copies of the T allele."
+      },
+      "source": "literature / SNPedia summaries"
+    },
+    {
+      "rsid": "rs4680",
+      "gene": "COMT",
+      "category": "metabolism",
+      "summary": "Val158Met variant affecting catecholamine breakdown.",
+      "notes": {
+        "GG": "Val/Val — faster COMT activity allele pair.",
+        "AG": "Val/Met — intermediate.",
+        "AA": "Met/Met — slower COMT activity allele pair.",
+        "CC": "Val/Val (C coding).",
+        "CT": "Val/Met.",
+        "TT": "Met/Met."
+      },
+      "source": "literature / SNPedia summaries"
+    },
+    {
+      "rsid": "rs762551",
+      "gene": "CYP1A2",
+      "category": "pharmacogenetics",
+      "summary": "Caffeine metabolism (CYP1A2*1F).",
+      "notes": {
+        "AA": "Often described as faster caffeine metabolism.",
+        "AC": "Intermediate.",
+        "CC": "Often described as slower caffeine metabolism."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs4244285",
+      "gene": "CYP2C19",
+      "category": "pharmacogenetics",
+      "summary": "CYP2C19*2 — reduced-function allele for some drugs.",
+      "notes": {
+        "GG": "No *2 allele detected at this marker.",
+        "AG": "One *2 allele at this marker.",
+        "AA": "Two *2 alleles at this marker.",
+        "CC": "No *2 allele (C coding).",
+        "CT": "One *2 allele.",
+        "TT": "Two *2 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1799853",
+      "gene": "CYP2C9",
+      "category": "pharmacogenetics",
+      "summary": "CYP2C9*2 — reduced-function allele.",
+      "notes": {
+        "CC": "No *2 allele at this marker.",
+        "CT": "One *2 allele.",
+        "TT": "Two *2 alleles.",
+        "GG": "No *2 allele (G coding).",
+        "AG": "One *2 allele.",
+        "AA": "Two *2 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1057910",
+      "gene": "CYP2C9",
+      "category": "pharmacogenetics",
+      "summary": "CYP2C9*3 — reduced-function allele.",
+      "notes": {
+        "AA": "No *3 allele at this marker.",
+        "AC": "One *3 allele.",
+        "CC": "Two *3 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs12248560",
+      "gene": "CYP2C19",
+      "category": "pharmacogenetics",
+      "summary": "CYP2C19*17 — increased-function allele.",
+      "notes": {
+        "CC": "No *17 allele at this marker.",
+        "CT": "One *17 allele.",
+        "TT": "Two *17 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs9939609",
+      "gene": "FTO",
+      "category": "trait",
+      "summary": "FTO SNP associated with body-mass traits in population studies.",
+      "notes": {
+        "TT": "Common allele pair at this site.",
+        "AT": "One copy of the A allele.",
+        "AA": "Two copies of the A allele."
+      },
+      "source": "GWAS summaries"
+    },
+    {
+      "rsid": "rs7903146",
+      "gene": "TCF7L2",
+      "category": "trait",
+      "summary": "Widely studied type 2 diabetes risk SNP in Europeans.",
+      "notes": {
+        "CC": "Common allele pair at this site.",
+        "CT": "One copy of the T allele.",
+        "TT": "Two copies of the T allele."
+      },
+      "source": "GWAS summaries"
+    },
+    {
+      "rsid": "rs1800497",
+      "gene": "ANKK1/DRD2",
+      "category": "trait",
+      "summary": "Taq1A variant near dopamine receptor pathway genes.",
+      "notes": {
+        "GG": "A2/A2.",
+        "AG": "A1/A2.",
+        "AA": "A1/A1.",
+        "CC": "A2/A2 (C coding).",
+        "CT": "A1/A2.",
+        "TT": "A1/A1."
+      },
+      "source": "literature / SNPedia summaries"
+    },
+    {
+      "rsid": "rs429358",
+      "gene": "APOE",
+      "category": "trait",
+      "summary": "One of two SNPs used to define APOE ε alleles (with rs7412).",
+      "notes": {
+        "TT": "No ε4-defining allele at this marker.",
+        "CT": "One ε4-defining allele at this marker.",
+        "CC": "Two ε4-defining alleles at this marker."
+      },
+      "source": "literature"
+    },
+    {
+      "rsid": "rs7412",
+      "gene": "APOE",
+      "category": "trait",
+      "summary": "Second SNP used with rs429358 for APOE ε alleles.",
+      "notes": {
+        "CC": "Common allele at this marker.",
+        "CT": "One T allele.",
+        "TT": "Two T alleles."
+      },
+      "source": "literature"
+    },
+    {
+      "rsid": "rs1805007",
+      "gene": "MC1R",
+      "category": "trait",
+      "summary": "MC1R variant associated with red hair / fair skin traits.",
+      "notes": {
+        "CC": "No R151C allele at this marker.",
+        "CT": "One copy.",
+        "TT": "Two copies."
+      },
+      "source": "pigmentation genetics"
+    },
+    {
+      "rsid": "rs12913832",
+      "gene": "HERC2",
+      "category": "trait",
+      "summary": "Strongly associated with blue vs brown eye color in Europeans.",
+      "notes": {
+        "AA": "Often associated with brown eyes.",
+        "AG": "Intermediate / heterozygous.",
+        "GG": "Often associated with blue eyes."
+      },
+      "source": "pigmentation genetics"
+    },
+    {
+      "rsid": "rs4988235",
+      "gene": "MCM6/LCT",
+      "category": "trait",
+      "summary": "Lactase persistence (European-associated allele).",
+      "notes": {
+        "CC": "Likely lactase non-persistent allele pair.",
+        "CT": "One persistence allele.",
+        "TT": "Likely lactase persistent allele pair.",
+        "GG": "Likely non-persistent (G coding).",
+        "AG": "One persistence allele.",
+        "AA": "Likely persistent."
+      },
+      "source": "lactase persistence literature"
+    },
+    {
+      "rsid": "rs713598",
+      "gene": "TAS2R38",
+      "category": "trait",
+      "summary": "Bitter taste (PTC) sensitivity.",
+      "notes": {
+        "CC": "Often associated with tasting bitterness.",
+        "CG": "Intermediate.",
+        "GG": "Often associated with non-tasting."
+      },
+      "source": "taste genetics"
+    },
+    {
+      "rsid": "rs1815739",
+      "gene": "ACTN3",
+      "category": "trait",
+      "summary": "Alpha-actinin-3 (R577X) — muscle fiber related.",
+      "notes": {
+        "CC": "RR — functional ACTN3.",
+        "CT": "RX — one null allele.",
+        "TT": "XX — null/null."
+      },
+      "source": "sports genetics summaries"
+    },
+    {
+      "rsid": "rs53576",
+      "gene": "OXTR",
+      "category": "trait",
+      "summary": "Oxytocin receptor SNP studied in social-behavior research.",
+      "notes": {
+        "GG": "Common G/G genotype.",
+        "AG": "Heterozygous.",
+        "AA": "A/A genotype."
+      },
+      "source": "behavioral genetics literature"
+    },
+    {
+      "rsid": "rs1801282",
+      "gene": "PPARG",
+      "category": "trait",
+      "summary": "Pro12Ala variant studied in metabolic traits.",
+      "notes": {
+        "CC": "Pro/Pro.",
+        "CG": "Pro/Ala.",
+        "GG": "Ala/Ala."
+      },
+      "source": "GWAS summaries"
+    },
+    {
+      "rsid": "rs1333049",
+      "gene": "CDKN2B-AS1",
+      "category": "trait",
+      "summary": "9p21 SNP studied in coronary disease GWAS.",
+      "notes": {
+        "GG": "Common allele pair in many populations.",
+        "CG": "One C allele.",
+        "CC": "Two C alleles."
+      },
+      "source": "GWAS summaries"
+    },
+    {
+      "rsid": "rs6025",
+      "gene": "F5",
+      "category": "trait",
+      "summary": "Factor V Leiden (R506Q) marker.",
+      "notes": {
+        "GG": "No Leiden allele at this marker.",
+        "AG": "One Leiden allele.",
+        "AA": "Two Leiden alleles.",
+        "CC": "No Leiden allele (C coding).",
+        "CT": "One Leiden allele.",
+        "TT": "Two Leiden alleles."
+      },
+      "source": "hematology / SNPedia summaries"
+    },
+    {
+      "rsid": "rs1799963",
+      "gene": "F2",
+      "category": "trait",
+      "summary": "Prothrombin G20210A marker.",
+      "notes": {
+        "GG": "No 20210A allele.",
+        "AG": "One A allele.",
+        "AA": "Two A alleles."
+      },
+      "source": "hematology / SNPedia summaries"
+    },
+    {
+      "rsid": "rs1800566",
+      "gene": "NQO1",
+      "category": "metabolism",
+      "summary": "NQO1*2 — reduced enzyme activity allele.",
+      "notes": {
+        "CC": "No *2 allele.",
+        "CT": "One *2 allele.",
+        "TT": "Two *2 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1042522",
+      "gene": "TP53",
+      "category": "trait",
+      "summary": "TP53 Pro72Arg polymorphism.",
+      "notes": {
+        "GG": "Arg/Arg.",
+        "CG": "Pro/Arg.",
+        "CC": "Pro/Pro."
+      },
+      "source": "literature"
+    },
+    {
+      "rsid": "rs4880",
+      "gene": "SOD2",
+      "category": "metabolism",
+      "summary": "MnSOD Ala16Val variant.",
+      "notes": {
+        "AA": "Ala/Ala.",
+        "AG": "Ala/Val.",
+        "GG": "Val/Val.",
+        "TT": "Val/Val (T coding).",
+        "CT": "Ala/Val.",
+        "CC": "Ala/Ala."
+      },
+      "source": "literature"
+    },
+    {
+      "rsid": "rs1695",
+      "gene": "GSTP1",
+      "category": "metabolism",
+      "summary": "GSTP1 Ile105Val.",
+      "notes": {
+        "AA": "Ile/Ile.",
+        "AG": "Ile/Val.",
+        "GG": "Val/Val."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1056836",
+      "gene": "CYP1B1",
+      "category": "pharmacogenetics",
+      "summary": "CYP1B1 Leu432Val.",
+      "notes": {
+        "CC": "Leu/Leu.",
+        "CG": "Leu/Val.",
+        "GG": "Val/Val."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1065852",
+      "gene": "CYP2D6",
+      "category": "pharmacogenetics",
+      "summary": "CYP2D6*10-related marker (chip coverage varies).",
+      "notes": {
+        "CC": "No reduced-function allele at this marker.",
+        "CT": "One copy.",
+        "TT": "Two copies."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs3892097",
+      "gene": "CYP2D6",
+      "category": "pharmacogenetics",
+      "summary": "CYP2D6*4-related marker (chip coverage varies).",
+      "notes": {
+        "CC": "No *4 allele at this marker.",
+        "CT": "One *4 allele.",
+        "TT": "Two *4 alleles.",
+        "GG": "No *4 allele (G coding).",
+        "AG": "One *4 allele.",
+        "AA": "Two *4 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1801131",
+      "gene": "MTHFR",
+      "category": "metabolism",
+      "summary": "MTHFR A1298C.",
+      "notes": {
+        "AA": "Common allele pair.",
+        "AC": "One C allele.",
+        "CC": "Two C alleles.",
+        "TT": "Common (T coding).",
+        "GT": "One G allele.",
+        "GG": "Two G alleles."
+      },
+      "source": "literature / SNPedia summaries"
+    },
+    {
+      "rsid": "rs17782313",
+      "gene": "MC4R",
+      "category": "trait",
+      "summary": "Near MC4R; studied for BMI association.",
+      "notes": {
+        "TT": "Common allele pair.",
+        "CT": "One C allele.",
+        "CC": "Two C alleles."
+      },
+      "source": "GWAS summaries"
+    },
+    {
+      "rsid": "rs1426654",
+      "gene": "SLC24A5",
+      "category": "trait",
+      "summary": "Skin pigmentation SNP (Ala111Thr).",
+      "notes": {
+        "AA": "Often associated with lighter pigmentation.",
+        "AG": "Heterozygous.",
+        "GG": "Often associated with darker pigmentation."
+      },
+      "source": "pigmentation genetics"
+    },
+    {
+      "rsid": "rs16891982",
+      "gene": "SLC45A2",
+      "category": "trait",
+      "summary": "Skin/hair pigmentation SNP.",
+      "notes": {
+        "GG": "Often associated with lighter pigmentation.",
+        "CG": "Heterozygous.",
+        "CC": "Often associated with darker pigmentation."
+      },
+      "source": "pigmentation genetics"
+    },
+    {
+      "rsid": "rs17822931",
+      "gene": "ABCC11",
+      "category": "trait",
+      "summary": "Dry vs wet earwax / body odor related variant.",
+      "notes": {
+        "CC": "Often wet earwax type.",
+        "CT": "Heterozygous.",
+        "TT": "Often dry earwax type."
+      },
+      "source": "literature"
+    },
+    {
+      "rsid": "rs671",
+      "gene": "ALDH2",
+      "category": "metabolism",
+      "summary": "ALDH2*2 — alcohol flush reaction allele (East Asian-enriched).",
+      "notes": {
+        "GG": "No *2 allele.",
+        "AG": "One *2 allele.",
+        "AA": "Two *2 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1229984",
+      "gene": "ADH1B",
+      "category": "metabolism",
+      "summary": "ADH1B alcohol metabolism variant.",
+      "notes": {
+        "CC": "Common allele pair in many populations.",
+        "CT": "One T allele.",
+        "TT": "Two T alleles.",
+        "GG": "Common (G coding).",
+        "AG": "One A allele.",
+        "AA": "Two A alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1800460",
+      "gene": "TPMT",
+      "category": "pharmacogenetics",
+      "summary": "TPMT reduced-function marker (coverage varies by chip).",
+      "notes": {
+        "GG": "No reduced-function allele at this marker.",
+        "AG": "One copy.",
+        "AA": "Two copies."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs4149056",
+      "gene": "SLCO1B1",
+      "category": "pharmacogenetics",
+      "summary": "SLCO1B1*5-related marker (statin myopathy studies).",
+      "notes": {
+        "TT": "No *5 allele at this marker.",
+        "CT": "One *5 allele.",
+        "CC": "Two *5 alleles."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs1799971",
+      "gene": "OPRM1",
+      "category": "pharmacogenetics",
+      "summary": "OPRM1 A118G (Asn40Asp).",
+      "notes": {
+        "AA": "Asn/Asn.",
+        "AG": "Asn/Asp.",
+        "GG": "Asp/Asp."
+      },
+      "source": "pharmacogenetics literature"
+    },
+    {
+      "rsid": "rs6265",
+      "gene": "BDNF",
+      "category": "trait",
+      "summary": "BDNF Val66Met.",
+      "notes": {
+        "GG": "Val/Val.",
+        "AG": "Val/Met.",
+        "AA": "Met/Met."
+      },
+      "source": "neuroscience literature"
+    }
+  ]
+}

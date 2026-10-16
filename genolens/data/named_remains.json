@@ -1,0 +1,45 @@
+{
+  "disclaimer": "Named ancient or historical individuals with public genotype data when present in AADR. Royal Egyptian pharaohs and Achaemenid kings do not have released genomes.",
+  "missing_royals": [
+    "No published genomes from Achaemenid kings (Cyrus, Darius, Xerxes).",
+    "Tutankhamun-family and Ramesses III studies used STR fingerprints; full genomes were not released.",
+    "Closest useful references are anonymous ancient Egyptians, Iranians, and other AADR groups — not named kings."
+  ],
+  "individuals": [
+    {
+      "name": "Ötzi the Iceman",
+      "aadr_ids": ["Iceman", "Otzi", "Ötzi"],
+      "notes": "Full genome public; Copper Age Alpine mummy."
+    },
+    {
+      "name": "Richard III",
+      "aadr_ids": ["RichardIII", "Richard_III"],
+      "notes": "Identified remains; public ancient DNA studies."
+    },
+    {
+      "name": "Beethoven",
+      "aadr_ids": ["Beethoven"],
+      "notes": "Sequenced from hair locks (2023); data on ENA."
+    },
+    {
+      "name": "Abusir el-Meleq Egyptians",
+      "aadr_ids": ["AbusirElMeleq", "JK2134", "JK2888", "JK2911"],
+      "notes": "Published non-royal Egyptian mummies with public genotype data."
+    },
+    {
+      "name": "Nuwayrat Old Kingdom man",
+      "aadr_ids": ["Nuwayrat", "NUE001"],
+      "notes": "Old Kingdom Egyptian individual with public data (2025)."
+    },
+    {
+      "name": "Romanov family",
+      "aadr_ids": ["Romanov", "NicholasII", "Alexandra"],
+      "notes": "Historical identification studies; coverage in AADR varies by release."
+    },
+    {
+      "name": "Copernicus",
+      "aadr_ids": ["Copernicus"],
+      "notes": "Identified remains; public reports."
+    }
+  ]
+}

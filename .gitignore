@@ -1,0 +1,35 @@
+# Private genome files — never commit
+data/*.txt
+data/reference/
+!data/.gitkeep
+
+# Runtime downloads from snps/lineage (genetic maps, chip clusters)
+resources/
+
+# Local agent knowledge base
+my-docs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg
+genolens.egg-info/
+.Python
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
