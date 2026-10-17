@@ -81,6 +81,18 @@ def _cached_genome(path_str: str):
     return load_genome(path_str)
 
 
+@app.get("/")
+def api_root() -> dict[str, str]:
+    """Avoid a bare 404 when opening the API port in a browser."""
+    return {
+        "service": "genolens-api",
+        "message": "This is the API only. Open the report UI at http://localhost:3000",
+        "openapi": "http://127.0.0.1:8000/docs",
+        "health": "http://127.0.0.1:8000/api/health",
+        "hint": "Start the UI with: cd web && npm run dev",
+    }
+
+
 @app.get("/api/health")
 def api_health() -> dict[str, str]:
     return {"status": "ok", "service": "genolens"}

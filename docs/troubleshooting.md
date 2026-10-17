@@ -1,5 +1,27 @@
 # Troubleshooting
 
+## Browser shows `404` / `{"detail":"Not Found"}`
+
+**Cause:** You opened the **API** port (`http://127.0.0.1:8000/`) instead of the
+**UI**, or the Next.js app is not running.
+
+GenoLens needs **two** processes:
+
+```bash
+# Terminal 1 — API
+uvicorn api.main:app --host 127.0.0.1 --port 8000
+
+# Terminal 2 — UI
+cd web && npm run dev
+```
+
+Then open **http://localhost:3000** (not `:8000`).
+
+- API OpenAPI UI: http://127.0.0.1:8000/docs
+- API health: http://127.0.0.1:8000/api/health
+
+---
+
 ## UI shows “API offline”
 
 **Cause:** Next.js cannot reach FastAPI.
