@@ -823,6 +823,30 @@ button.linkish {
   margin: 0 0 1rem;
 }
 
+.prs-mode-banner.prs-mode-catalog {
+  background: #eef7f4;
+  border-color: #cfe6df;
+  color: var(--teal-deep);
+}
+
+.prs-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.25rem;
+  align-items: center;
+  margin: 0 0 1.15rem;
+}
+
+.prs-toolbar input[type="search"],
+.prs-toolbar select {
+  margin-left: 0.35rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: white;
+  min-width: 12rem;
+}
+
 .prs-card-grid {
   display: grid;
   gap: 1.15rem;

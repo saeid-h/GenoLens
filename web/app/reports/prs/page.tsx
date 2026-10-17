@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
 import { HubIllustration } from "@/components/illustrations";
 import { getPrs } from "@/lib/api";
@@ -40,6 +40,9 @@ type ScoreRow = {
 export default function PrsPage() {
   const { primaryId } = useSample();
   const [data, setData] = useState<Record<string, any> | null>(null);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"coverage" | "name">("coverage");
+
   useEffect(() => {
     if (!primaryId) return;
     getPrs(primaryId).then(setData).catch(() => setData(null));
@@ -47,6 +50,30 @@ export default function PrsPage() {
 
   const scores = (data?.scores || []) as ScoreRow[];
   const isDemo = Boolean(data?.is_demo);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    let rows = scores;
+    if (q) {
+      rows = rows.filter(
+        (s) =>
+          s.id.toLowerCase().includes(q) ||
+          (s.trait || "").toLowerCase().includes(q) ||
+          (s.trait_plain || "").toLowerCase().includes(q) ||
+          (s.citation || "").toLowerCase().includes(q)
+      );
+    }
+    rows = [...rows].sort((a, b) => {
+      if (sort === "name") {
+        return (a.trait_plain || a.trait).localeCompare(b.trait_plain || b.trait);
+      }
+      const ca = a.coverage_percent ?? 0;
+      const cb = b.coverage_percent ?? 0;
+      if (cb !== ca) return cb - ca;
+      return Math.abs(b.raw_score) - Math.abs(a.raw_score);
+    });
+    return rows;
+  }, [scores, query, sort]);
 
   return (
     <div className="panel">
@@ -63,17 +90,21 @@ export default function PrsPage() {
           </p>
           <p className="muted" style={{ marginBottom: 0 }}>
             It is an <strong>allele sum</strong>, not a measurement of your body and not a
-            diagnosis. Coverage (how many of the score’s SNPs are on your chip) matters as much as
-            the number itself.
+            diagnosis. Prefer scores with higher chip coverage.
           </p>
         </div>
       </div>
 
-      {isDemo && (
+      {isDemo ? (
         <div className="prs-mode-banner">
-          <strong>Demo mode.</strong> You are seeing GenoLens’s tiny synthetic weight list so this
-          page is readable. It is <em>not</em> a published PGS Catalog score and must not be read as
-          height, BMI, or caffeine advice.
+          <strong>Demo mode.</strong> Tiny synthetic weights only. To load published open scores
+          locally (no DNA upload):{" "}
+          <code>.venv/bin/python scripts/download_pgs_catalog.py</code> then restart the API.
+        </div>
+      ) : (
+        <div className="prs-mode-banner prs-mode-catalog">
+          <strong>Catalog mode.</strong> Open PGS Catalog subset on this machine (
+          {scores.length} scores). Exploratory — not clinical risk.
         </div>
       )}
 
@@ -86,8 +117,32 @@ export default function PrsPage() {
         </p>
       </details>
 
+      {scores.length > 3 && (
+        <div className="prs-toolbar">
+          <label>
+            Filter{" "}
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="trait, PGS id, citation…"
+            />
+          </label>
+          <label>
+            Sort{" "}
+            <select value={sort} onChange={(e) => setSort(e.target.value as "coverage" | "name")}>
+              <option value="coverage">Coverage on your chip</option>
+              <option value="name">Trait name</option>
+            </select>
+          </label>
+          <span className="muted">
+            Showing {filtered.length}/{scores.length}
+          </span>
+        </div>
+      )}
+
       <div className="prs-card-grid">
-        {scores.map((s) => {
+        {filtered.map((s) => {
           const frac = s.fraction_of_panel_max;
           const pct = frac == null ? null : Math.max(0, Math.min(100, frac * 100));
           return (
@@ -116,13 +171,16 @@ export default function PrsPage() {
                   <div className="label">SNPs called</div>
                   <div className="value">
                     {s.variants_used}/{s.variants_total ?? s.variants_used + s.variants_missing}
+                    {s.coverage_percent != null ? (
+                      <span className="muted"> ({s.coverage_percent.toFixed(0)}%)</span>
+                    ) : null}
                   </div>
                 </div>
               </div>
               {pct != null && (
                 <div className="prs-bar-block">
                   <div className="muted" style={{ marginBottom: "0.35rem" }}>
-                    Where you sit on <em>this tiny panel only</em>
+                    Where you sit on <em>this score’s panel</em>
                     {s.panel_band ? ` — ${s.panel_band}` : ""}
                   </div>
                   <div className="bar-track">
@@ -143,7 +201,7 @@ export default function PrsPage() {
               </details>
               {s.variants && s.variants.length > 0 && (
                 <details className="prediction-how">
-                  <summary>SNP contributions</summary>
+                  <summary>SNP contributions ({s.variants.length})</summary>
                   <table className="data">
                     <thead>
                       <tr>
@@ -162,7 +220,7 @@ export default function PrsPage() {
                           <td>{v.genotype || "Not called"}</td>
                           <td>{v.effect_allele}</td>
                           <td>{v.dosage == null ? "—" : v.dosage}</td>
-                          <td>{Number(v.weight).toFixed(3)}</td>
+                          <td>{Number(v.weight).toFixed(4)}</td>
                           <td>{Number(v.contribution).toFixed(4)}</td>
                         </tr>
                       ))}
@@ -174,6 +232,7 @@ export default function PrsPage() {
           );
         })}
       </div>
+      {filtered.length === 0 && <p className="muted">No scores match this filter.</p>}
     </div>
   );
 }

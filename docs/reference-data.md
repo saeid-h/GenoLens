@@ -51,17 +51,39 @@ Full AADR packages are large; do not commit them.
 | Catalog | https://www.pgscatalog.org/ |
 | Shipped default | `genolens/data/prs_demo.json` |
 | Optional override | `data/reference/prs/catalog.json` |
+| Download helper | `scripts/download_pgs_catalog.py` |
 | Metadata fetch | `fetch_pgs_score_metadata(pgs_id)` (annotation only) |
+
+### Do you need a download?
+
+No for understanding the hub (demo mode is enough). Yes if you want published
+open weights instead of synthetic demos.
+
+**Not practical:** downloading the *entire* PGS Catalog (~7k scores, many with
+10k–1M+ variants). Giant panels barely overlap a 23andMe chip and would make
+scoring/UI unusable.
+
+**Default download (best judgment):** a **diverse** subset — about **80** scores,
+preferring different traits, each with **≤100 variants**, converted to local JSON:
+
+```bash
+.venv/bin/python scripts/download_pgs_catalog.py
+# optional: --max-variants 200 --limit 150
+```
+
+Writes gitignored `data/reference/prs/catalog.json`. Restart the API afterward;
+`/reports/prs` should leave demo mode (filter/sort by chip coverage).
 
 Expected conceptual shape (simplified):
 
 ```json
 {
+  "mode": "catalog",
   "disclaimer": "Exploratory only…",
   "scores": [
     {
-      "id": "DEMO_BMI",
-      "trait": "Example trait",
+      "id": "PGS000001",
+      "trait": "Breast cancer",
       "variants": [
         { "rsid": "rs123", "effect_allele": "A", "weight": 0.01 }
       ]
@@ -71,7 +93,7 @@ Expected conceptual shape (simplified):
 ```
 
 Scores report raw weighted dosage sums and markers used/missing — not calibrated
-clinical risk.
+clinical risk. Cite PGS Catalog / the original publications; follow EBI terms.
 
 ---
 
