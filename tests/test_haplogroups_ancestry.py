@@ -42,17 +42,28 @@ def test_ancestry_does_not_crash(synthetic_genome_a):
     assert result.method
     assert result.note
     assert result.method_summary
-    assert "continental" in result.method_summary.lower() or "AIM" in result.method_summary
+    assert (
+        "AIM" in result.method_summary
+        or "1000 Genomes" in result.method_summary
+        or "affinity" in result.method_summary.lower()
+    )
     # Without ezancestry, bundled AIM likelihood should still return a structured result
-    assert result.method in {"aim_likelihood", "snps.predict_ancestry", "unavailable", "error", "none"}
+    assert result.method in {
+        "aim_likelihood",
+        "aim_pop_likelihood",
+        "snps.predict_ancestry",
+        "unavailable",
+        "error",
+        "none",
+    }
     assert result.error is None or isinstance(result.error, str)
-    assert "AFR" in result.population_labels
-    assert result.population_labels["EUR"] == "European"
+    assert "AFR" in result.population_labels or "EUR" in result.population_labels
     payload = result.as_dict()
     assert "superpopulation_label" in payload
     assert "population_labels" in payload
     assert "method_summary" in payload
     assert "percentages" in payload
+    assert "markers_used" in payload
     if result.populations:
         pct = result.percentages()
         assert abs(sum(pct.values()) - 100.0) < 1e-3
@@ -60,3 +71,13 @@ def test_ancestry_does_not_crash(synthetic_genome_a):
     if result.superpopulation:
         assert result.label_for(result.superpopulation)
         assert "(" in result.label_for(result.superpopulation)
+
+
+def test_ancestry_panel_has_populations():
+    from genolens.ancestry import _load_aim_panel
+
+    panel = _load_aim_panel()
+    assert len(panel.get("markers") or []) >= 40
+    pops = panel.get("populations") or []
+    assert "GIH" in pops and "TSI" in pops and "YRI" in pops
+    assert panel.get("region_of", {}).get("GIH") == "SAS"

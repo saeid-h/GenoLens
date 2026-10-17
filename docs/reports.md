@@ -21,15 +21,19 @@ available.
 
 ## A — Ancestry Composition
 
-**Intent:** Softmax AIM (Ancestry Informative Marker) affinity percentages across
-continental / superpopulation-style labels.
+**Intent:** Genotype likelihood affinity against **1000 Genomes Phase 3 analysis
+populations** (26 groups), rolled up into continental regions. Built from a denser
+open AIM panel (`genolens/data/aim_panel.json`; rebuild with
+`scripts/build_ancestry_panel.py`).
 
-**Not claimed:** Fine-grained country ethnicity, tribal identity, or legal ancestry.
+**Not claimed:** Country ethnicity, tribal identity, or legal ancestry. 1000 Genomes
+has **no** Iranian / Levant / North Africa panels — West Asian samples often look
+closest to South Asian (GIH/ITU/PJL) and/or Southern European (TSI/IBS).
 
-**UI:** Stacked / bar percentages (`PercentBars`). If AIM markers are sparse on a
-file, percentages are still exploratory — read markers-used notes in the payload.
+**UI:** Regional bars + table of closest 1000 Genomes populations; markers used /
+total; temperature-scaled likelihood to reduce fake 99% certainty.
 
-**Upgrade path:** Denser open AISNP / Human Origins frequencies (still local).
+**Upgrade path:** Human Origins / AADR modern references for MENA-aware labels.
 
 ---
 

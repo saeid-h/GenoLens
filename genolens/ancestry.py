@@ -1,4 +1,4 @@
-"""Broad ancestry prediction via optional ezancestry, with a local AIM fallback."""
+"""Ancestry affinity via local AIM likelihood (population + regional rollups)."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from genolens.paths import SHIPPED_DATA
 
 _EPS = 1e-4
 
-# 1000 Genomes Phase 3 superpopulation codes → plain-language names.
+# Fallback labels when an older panel only has supers.
 SUPERPOPULATION_LABELS: dict[str, str] = {
     "AFR": "African",
     "AMR": "Admixed American",
@@ -25,14 +25,13 @@ SUPERPOPULATION_LABELS: dict[str, str] = {
 }
 
 AIM_METHOD_SUMMARY = (
-    "Percentages show broad continental / superpopulation affinity from ancestry-informative "
-    "markers (AIMs), not a country, ethnicity, or tribal identity. Values are normalized "
-    "likelihood weights that sum to ~100% across superpopulations."
+    "Percentages show affinity to 1000 Genomes reference groups from ancestry-informative "
+    "markers — not country, ethnicity, or tribal identity."
 )
 
 
 def superpopulation_label(code: str | None, labels: dict[str, str] | None = None) -> str:
-    """Return ``Full name (CODE)`` for a superpopulation code, or the raw code if unknown."""
+    """Return ``Full name (CODE)`` for a population/region code."""
     if not code:
         return ""
     key = str(code).upper()
@@ -55,16 +54,17 @@ def normalize_population_weights(populations: dict[str, float]) -> dict[str, flo
 
 
 def population_percentages(populations: dict[str, float]) -> dict[str, float]:
-    """Return percentages (0–100) that sum to ~100 across superpopulations."""
+    """Return percentages (0–100) that sum to ~100."""
     return {k: v * 100.0 for k, v in normalize_population_weights(populations).items()}
 
 
 def _panel_labels(panel: dict[str, Any] | None = None) -> dict[str, str]:
     panel = panel or _load_aim_panel()
     merged = dict(SUPERPOPULATION_LABELS)
-    raw = panel.get("labels") or {}
-    if isinstance(raw, dict):
-        merged.update({str(k).upper(): str(v) for k, v in raw.items()})
+    for key in ("labels", "region_labels", "population_labels"):
+        raw = panel.get(key) or {}
+        if isinstance(raw, dict):
+            merged.update({str(k).upper(): str(v) for k, v in raw.items()})
     return merged
 
 
@@ -81,33 +81,44 @@ class AncestryResult:
     note: str
     error: str | None = None
     markers_used: int = 0
+    markers_total: int = 0
     method_summary: str = AIM_METHOD_SUMMARY
     population_labels: dict[str, str] = field(default_factory=lambda: dict(SUPERPOPULATION_LABELS))
+    # New fields: fine-scale 1000G pops + regional rollup
+    population_scores: dict[str, float] = field(default_factory=dict)
+    region_scores: dict[str, float] = field(default_factory=dict)
+    top_populations: list[dict[str, Any]] = field(default_factory=list)
 
     def label_for(self, code: str | None) -> str:
         return superpopulation_label(code, self.population_labels)
 
     def percentages(self) -> dict[str, float]:
-        """Normalized affinity percentages (sum ≈ 100)."""
+        """Primary display percentages (regions when available, else legacy pops)."""
+        if self.region_scores:
+            return population_percentages(self.region_scores)
         return population_percentages(self.populations)
 
     def ranked_percentages(self) -> list[tuple[str, float]]:
-        """``(code, percent)`` pairs sorted descending by percentage."""
         return sorted(self.percentages().items(), key=lambda item: -item[1])
 
     def as_dict(self) -> dict[str, Any]:
         pct = self.percentages()
+        pop_pct = population_percentages(self.population_scores) if self.population_scores else {}
         return {
             "superpopulation": self.superpopulation,
             "superpopulation_label": self.label_for(self.superpopulation),
             "populations": self.populations,
             "percentages": pct,
+            "region_percentages": pct,
+            "population_percentages": pop_pct,
+            "top_populations": self.top_populations,
             "population_labels": self.population_labels,
             "method": self.method,
             "method_summary": self.method_summary,
             "note": self.note,
             "error": self.error,
             "markers_used": self.markers_used,
+            "markers_total": self.markers_total,
         }
 
 
@@ -130,21 +141,39 @@ def _allele_count(genotype: str, allele: str) -> int | None:
     if not alleles:
         return None
     target = allele.upper()
-    # Haploid (Y/MT-style) or single reported base → treat as 0 or 2 copies.
     if len(alleles) == 1:
         return 2 if alleles[0] == target else 0
     return sum(1 for a in alleles if a == target)
 
 
+def _softmax(loglik: dict[str, float], *, temperature: float = 1.0) -> dict[str, float]:
+    """Temperature>1 flattens overconfident peaks from many markers."""
+    if not loglik:
+        return {}
+    t = max(temperature, 1e-6)
+    scaled = {k: v / t for k, v in loglik.items()}
+    max_ll = max(scaled.values())
+    weights = {k: math.exp(ll - max_ll) for k, ll in scaled.items()}
+    return normalize_population_weights(weights)
+
+
 def _predict_aim_likelihood(snps: SNPs, panel: dict[str, Any] | None = None) -> AncestryResult:
-    """Naive diploid likelihood under 1000 Genomes Phase 3 superpopulation AFs."""
+    """Diploid likelihood under 1000 Genomes allele frequencies (pops and/or regions)."""
     panel = panel or _load_aim_panel()
     labels = _panel_labels(panel)
     summary = _method_summary(panel)
     genotypes = genotype_lookup(snps)
-    supers = list(panel.get("superpopulations") or ["AFR", "EUR", "EAS", "SAS", "AMR"])
-    loglik = {sp: 0.0 for sp in supers}
+
+    # Prefer fine-scale analysis populations when the panel has them.
+    pop_codes = list(panel.get("populations") or [])
+    region_of = {str(k).upper(): str(v).upper() for k, v in (panel.get("region_of") or {}).items()}
+    use_pops = bool(pop_codes)
+    keys = pop_codes if use_pops else list(
+        panel.get("superpopulations") or ["AFR", "EUR", "EAS", "SAS", "AMR"]
+    )
+    loglik = {k: 0.0 for k in keys}
     used = 0
+    total_markers = len(panel.get("markers") or [])
 
     for marker in panel.get("markers") or []:
         rsid = marker.get("rsid")
@@ -158,50 +187,86 @@ def _predict_aim_likelihood(snps: SNPs, panel: dict[str, Any] | None = None) -> 
         count = _allele_count(geno, allele)
         if count is None:
             continue
+        # Skip marker if fewer than half the keys have frequencies
+        present = sum(1 for k in keys if k in freqs)
+        if present < max(3, len(keys) // 3):
+            continue
         used += 1
-        for sp in supers:
-            p = min(1.0 - _EPS, max(_EPS, float(freqs.get(sp, 0.5))))
-            # Hardy–Weinberg genotype probability for 0/1/2 copies of `allele`.
+        for key in keys:
+            p = min(1.0 - _EPS, max(_EPS, float(freqs.get(key, 0.5))))
             if count == 0:
                 prob = (1.0 - p) ** 2
             elif count == 1:
                 prob = 2.0 * p * (1.0 - p)
             else:
                 prob = p ** 2
-            loglik[sp] += math.log(max(prob, _EPS))
+            loglik[key] += math.log(max(prob, _EPS))
 
     if used == 0:
         return AncestryResult(
             superpopulation=None,
             populations={},
-            method="aim_likelihood",
+            method="aim_pop_likelihood" if use_pops else "aim_likelihood",
             note="No AIM markers from the bundled panel were called on this chip.",
             markers_used=0,
+            markers_total=total_markers,
             method_summary=summary,
             population_labels=labels,
         )
 
-    # Softmax over log-likelihoods → normalized weights (sum to 1; UI shows %).
-    max_ll = max(loglik.values())
-    weights = {sp: math.exp(ll - max_ll) for sp, ll in loglik.items()}
-    populations = normalize_population_weights({sp: float(weights[sp]) for sp in supers})
-    best = max(populations, key=populations.get)  # type: ignore[arg-type]
+    # Mild temperature scaling so 100 markers don't produce 99% fake certainty.
+    temperature = max(1.0, math.sqrt(used) / 4.0)
+    raw_scores = _softmax(loglik, temperature=temperature)
+
+    population_scores: dict[str, float] = {}
+    region_scores: dict[str, float] = {}
+    if use_pops:
+        population_scores = raw_scores
+        for pop, weight in raw_scores.items():
+            region = region_of.get(pop.upper())
+            if not region:
+                continue
+            region_scores[region] = region_scores.get(region, 0.0) + weight
+        region_scores = normalize_population_weights(region_scores)
+        populations = region_scores
+    else:
+        populations = raw_scores
+        region_scores = raw_scores
+
+    best_region = max(populations, key=populations.get) if populations else None  # type: ignore[arg-type]
+    top_populations: list[dict[str, Any]] = []
+    if population_scores:
+        ranked = sorted(population_scores.items(), key=lambda item: -item[1])[:8]
+        for code, weight in ranked:
+            top_populations.append(
+                {
+                    "code": code,
+                    "label": labels.get(code.upper(), code),
+                    "percent": weight * 100.0,
+                    "region": region_of.get(code.upper()),
+                }
+            )
+
     disclaimer = panel.get("disclaimer") or (
-        "Exploratory AIM likelihood against 1000 Genomes superpopulations. "
-        "Not a continental identity certificate."
+        "Exploratory AIM likelihood against 1000 Genomes references. "
+        "Not an ethnicity certificate."
     )
+    method = "aim_pop_likelihood" if use_pops else "aim_likelihood"
     return AncestryResult(
-        superpopulation=best,
+        superpopulation=best_region,
         populations=populations,
-        method="aim_likelihood",
+        method=method,
         note=(
-            f"{disclaimer} Used {used} overlapping AIMs. "
-            "1000 Genomes lacks a dedicated MENA cluster; West Asian samples often land near "
-            "South Asian (SAS) / European (EUR)."
+            f"{disclaimer} Used {used}/{total_markers} overlapping AIMs "
+            f"(temperature={temperature:.2f} to reduce overconfidence)."
         ),
         markers_used=used,
+        markers_total=total_markers,
         method_summary=summary,
         population_labels=labels,
+        population_scores=population_scores,
+        region_scores=region_scores,
+        top_populations=top_populations,
     )
 
 
@@ -245,6 +310,7 @@ def _from_ezancestry_prediction(prediction: Any) -> AncestryResult:
     return AncestryResult(
         superpopulation=str(superpop) if superpop else None,
         populations=populations,
+        region_scores=populations,
         method=method,
         note=(
             "Exploratory superpopulation call against 1000 Genomes AISNPs via ezancestry. "
@@ -256,11 +322,10 @@ def _from_ezancestry_prediction(prediction: Any) -> AncestryResult:
 
 
 def predict_ancestry(snps: SNPs) -> AncestryResult:
-    """Predict 1000 Genomes-style ancestry.
+    """Predict ancestry affinity against the bundled open reference panel.
 
-    Prefers ``snps.predict_ancestry`` when ezancestry is installed. Otherwise uses a
-    bundled AIM allele-frequency likelihood so the Ancestry page stays useful without
-    the pandas 1.x / Python<3.12 pins that ezancestry requires.
+    Prefers ``snps.predict_ancestry`` when ezancestry is installed. Otherwise uses the
+    local AIM / population-frequency likelihood (default path).
     """
     if _ezancestry_available():
         try:
@@ -278,15 +343,7 @@ def predict_ancestry(snps: SNPs) -> AncestryResult:
             return _predict_aim_likelihood(snps)
         return _from_ezancestry_prediction(prediction)
 
-    # Default path: local AIM panel (no optional dep / no pandas pin conflict).
-    result = _predict_aim_likelihood(snps)
-    result.note = (
-        result.note
-        + " Optional ezancestry is not installed (and on Python 3.12+ cannot be: "
-        'it requires Python <3.12 and pandas 1.x). For experiments: '
-        'pip install -e ".[ancestry]" in a separate Python 3.10/3.11 env.'
-    )
-    return result
+    return _predict_aim_likelihood(snps)
 
 
 def _is_number(value: Any) -> bool:

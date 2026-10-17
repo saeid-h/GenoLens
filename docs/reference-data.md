@@ -102,8 +102,15 @@ chip rsID/position coverage.
 
 ## AIM ancestry
 
-Shipped: `genolens/data/aim_panel.json`. Powers default Ancestry % without the
-optional `ezancestry` extra.
+Shipped: `genolens/data/aim_panel.json` — denser AISNP-style markers with
+**1000 Genomes Phase 3 population** allele frequencies (Ensembl), plus region
+rollups. Rebuild offline-ready panel (needs network once):
+
+```bash
+python scripts/build_ancestry_panel.py
+```
+
+Optional `ezancestry` extra is not required.
 
 ---
 
