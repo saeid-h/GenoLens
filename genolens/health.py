@@ -43,13 +43,25 @@ def load_panel(path: Path | None = None) -> dict[str, Any]:
         return json.load(fh)
 
 
-def match_health(snps: SNPs, panel: dict[str, Any] | None = None) -> list[HealthHit]:
+TRAIT_CATEGORIES = frozenset({"trait"})
+WELLNESS_CATEGORIES = frozenset({"metabolism", "wellness"})
+PHARMA_CATEGORIES = frozenset({"pharmacogenetics"})
+HEALTH_CATEGORIES = frozenset({"health", "carrier"})
+
+
+def match_health(
+    snps: SNPs,
+    panel: dict[str, Any] | None = None,
+    categories: set[str] | frozenset[str] | None = None,
+) -> list[HealthHit]:
     """Return panel rows with genotype-specific notes when the SNP is called."""
     panel = panel or load_panel()
     genotypes = genotype_lookup(snps)
     hits: list[HealthHit] = []
 
     for marker in panel.get("markers", []):
+        if categories is not None and marker.get("category") not in categories:
+            continue
         rsid = marker["rsid"]
         geno = genotypes.get(rsid)
         notes = marker.get("notes", {})

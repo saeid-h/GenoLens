@@ -513,6 +513,54 @@
         "AA": "Met/Met."
       },
       "source": "neuroscience literature"
+    },
+    {
+      "rsid": "rs1801260",
+      "gene": "CLOCK",
+      "category": "wellness",
+      "summary": "Circadian CLOCK variant (exploratory sleep-adjacent).",
+      "notes": {
+        "TT": "Common CLOCK genotype on this panel.",
+        "CT": "Heterozygous CLOCK genotype (exploratory).",
+        "CC": "Alternate CLOCK genotype (exploratory)."
+      },
+      "source": "circadian genetics literature"
+    },
+    {
+      "rsid": "rs113993960",
+      "gene": "CFTR",
+      "category": "carrier",
+      "summary": "CFTR F508del proxy marker — exploratory carrier-style note only.",
+      "notes": {
+        "II": "Insertion/insertion call on chip (not a diagnosis).",
+        "DI": "Heterozygous-style call — not a clinical carrier report.",
+        "DD": "Deletion-style call — seek clinical testing; not a diagnosis."
+      },
+      "source": "ClinVar / cystic fibrosis literature (redistributable rsID list)"
+    },
+    {
+      "rsid": "rs1800562",
+      "gene": "HFE",
+      "category": "carrier",
+      "summary": "HFE C282Y — hereditary hemochromatosis-associated variant (exploratory).",
+      "notes": {
+        "GG": "No C282Y allele called (exploratory).",
+        "AG": "One C282Y allele called — not a diagnosis; clinical testing required for decisions.",
+        "AA": "Two C282Y alleles called — not a diagnosis; speak with a clinician."
+      },
+      "source": "ClinVar / hemochromatosis literature"
+    },
+    {
+      "rsid": "rs334",
+      "gene": "HBB",
+      "category": "carrier",
+      "summary": "HBB sickle-cell associated variant (exploratory; often absent on DTC chips).",
+      "notes": {
+        "AA": "No sickle allele called on this file (exploratory).",
+        "AT": "Heterozygous-style call — not a clinical sickle-cell report.",
+        "TT": "Homozygous-style call — seek clinical confirmation; not a diagnosis."
+      },
+      "source": "ClinVar / hemoglobinopathy literature"
     }
   ]
 }
