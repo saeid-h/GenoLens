@@ -3,7 +3,8 @@ from pathlib import Path
 from snps import SNPs
 
 from genolens.archaic import score_archaic
-from genolens.prs import score_prs
+from genolens.paths import SHIPPED_DATA
+from genolens.prs import load_prs_catalog, score_prs
 
 
 def _tiny_snps(tmp_path: Path) -> SNPs:
@@ -24,7 +25,10 @@ def test_archaic_and_prs_run(tmp_path):
     snps = _tiny_snps(tmp_path)
     archaic = score_archaic(snps)
     assert "hits" in archaic
-    prs = score_prs(snps)
+    # Force shipped demo weights so a local data/reference/prs/catalog.json cannot flake CI.
+    demo, mode = load_prs_catalog(SHIPPED_DATA / "prs_demo.json")
+    assert mode == "demo"
+    prs = score_prs(snps, catalog=demo)
     assert prs["scores"]
     assert prs["is_demo"] is True
     assert prs["mode"] == "demo"

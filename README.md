@@ -7,7 +7,7 @@ Local, private DNA reports inspired by consumer genetics sites—**GenoLens bran
 
 **Documentation:** see the full set under [`docs/`](docs/README.md) (architecture, API, report hubs A–J, relatives/pedigree, reference data, development, troubleshooting).
 
-**Version:** `0.0.0` (pre-release — no `v0.0.0` tag yet). New features start only after that release; see [`AGENTS.md`](AGENTS.md).
+**Version:** [`v0.0.0`](https://github.com/saeid-h/GenoLens/releases/tag/v0.0.0) — first public baseline. See [`AGENTS.md`](AGENTS.md) for how new work starts from this release.
 
 ## Limits
 
