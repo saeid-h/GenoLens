@@ -67,6 +67,22 @@ Single source of rules for every coding agent in this repository. Pointer files
 - When `my-docs/` exists, read `my-docs/machine-friendly/index.json` first for
   local context. Nothing public users need may live only in `my-docs/`.
 
+## Releases and versioning
+
+- **Baseline release is `v0.0.0`.** Package / API version strings track that
+  (currently `0.0.0`). A release means an annotated git tag `v0.0.0` (and later
+  `v0.0.1`, `v0.1.0`, …) created only when the owner explicitly asks.
+- **Status today:** GenoLens is **not** released as `v0.0.0` yet (no `v0.0.0`
+  tag). Pre-release work may finish the first shippable slice; do not treat
+  `main` tip as a released version until tagged.
+- **New features start only after `v0.0.0` is released.** Until that tag exists,
+  agents must not begin unrelated new features. Allowed work: bugs/fixes,
+  docs, tests, hardening, and completing the owner’s current pre-`v0.0.0` plan.
+- After `v0.0.0`, start each new feature from the release baseline (branch from
+  the tag or from `main` at that tag) unless the owner directs otherwise.
+- Never invent release tags or GitHub Releases without explicit owner consent.
+  Pushing tags counts as a push — still requires explicit consent.
+
 ## Product rules
 
 - Reports are **exploratory**, not medical advice, clinical diagnosis, or proof

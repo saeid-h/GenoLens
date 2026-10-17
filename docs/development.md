@@ -30,6 +30,14 @@ Read [`AGENTS.md`](../AGENTS.md) first. Highlights:
 
 Pointers: `CLAUDE.md`, `.cursorrules` → `AGENTS.md` only.
 
+## Releases
+
+- Package version is **`0.0.0`** until the owner cuts the first release tag
+  **`v0.0.0`**. That tag does not exist yet.
+- **Do not start new features** until `v0.0.0` is released. Pre-release work is
+  limited to finishing the current shippable slice, fixes, docs, and tests.
+- After `v0.0.0`, branch new features from that baseline. See `AGENTS.md`.
+
 ## Python workflow
 
 ```bash
