@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "genolens"
 version = "0.1.0"
-description = "Local 23andMe viewer for health markers, relatedness, ancestry, and ancient DNA affinity"
+description = "Local DNA report app for ancestry, traits, relatedness, and ancient affinity"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -14,6 +14,8 @@ dependencies = [
   "snps>=2.12.0",
   "lineage>=4.4.0",
   "streamlit>=1.28.0",
+  "fastapi>=0.110.0",
+  "uvicorn[standard]>=0.27.0",
   "pandas>=2.0.0",
   "numpy>=1.24.0",
   "scikit-learn>=1.3.0",
@@ -22,18 +24,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# ezancestry requires Python<3.12, pandas<2, numpy<2 — conflicts with the default
-# Streamlit stack. GenoLens ships a bundled AIM likelihood instead; use this extra
-# only in a separate 3.10/3.11 environment if you want snps.predict_ancestry.
 ancestry = ["ezancestry>=0.1.0", "pandas>=1.3.2,<2.0.0", "numpy>=1.21.2,<2.0.0"]
-dev = ["pytest>=7.4.0"]
+dev = ["pytest>=7.4.0", "httpx>=0.27.0"]
 
 [project.scripts]
 genolens = "genolens.app:main"
+genolens-api = "api.main:run"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["genolens*"]
+include = ["genolens*", "api*"]
 
 [tool.setuptools.package-data]
 genolens = ["data/*.json"]
