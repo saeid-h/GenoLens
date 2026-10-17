@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
 import { IllEmptyRelatives } from "@/components/illustrations";
 import { PedigreeView } from "@/components/PedigreeView";
-import { compare, familyTree } from "@/lib/api";
+import { familyTree } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
 type Pair = {
@@ -60,16 +60,11 @@ export default function RelativesPage() {
     setBusy(true);
     setError(null);
     try {
-      const cmp = await compare(primaryId, selected);
+      // family-tree already includes primary×candidates and candidate×candidate (≤8 people).
+      // Skip a separate /api/compare so we do not double the runtime and hit proxy timeouts.
       const tree = await familyTree(primaryId, selected);
       const treePairs = ((tree.pairs as Pair[]) || []) as Pair[];
-      const cmpPairs = ((cmp.pairs as Pair[]) || []) as Pair[];
-      // Prefer family-tree pairs (includes candidate×candidate); fill from compare if needed
-      const merged = new Map<string, Pair>();
-      for (const p of [...cmpPairs, ...treePairs]) {
-        merged.set(pairKey(p), p);
-      }
-      setPairs([...merged.values()].sort((a, b) => Number(b.shared_cm) - Number(a.shared_cm)));
+      setPairs([...treePairs].sort((a, b) => Number(b.shared_cm) - Number(a.shared_cm)));
       setPedigree(tree.pedigree || null);
       setBirthYearsUsed((tree.birth_years_used as Record<string, number | null>) || {});
     } catch (e) {
@@ -119,7 +114,7 @@ export default function RelativesPage() {
             Select all
           </button>
           <button className="cta" disabled={busy || selected.length === 0} onClick={run}>
-            {busy ? "Comparing… (may take a minute)" : "Compare selected"}
+            {busy ? "Comparing… (often 1–2 minutes for several genomes)" : "Compare selected"}
           </button>
         </div>
       </div>

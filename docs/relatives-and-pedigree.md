@@ -62,7 +62,9 @@ the user to set relationship / ages. It must **not** invent “grandma as sister
 
 1. Settings → choose primary; optionally enter birth years.
 2. Reports → DNA Relatives → select candidates (chips with birth-year badges).
-3. Compare selected → pedigree hero, then relationship cards:
+3. Compare selected → one `POST /api/family-tree` call (includes all selected
+   pairs; the UI does **not** also call `/api/compare`, which would double runtime).
+   Then pedigree hero and relationship cards:
    - **With you** — primary × each candidate
    - **Among selected relatives** — candidate × candidate (e.g. mother ×
      grandmother) when the selected set has 3–8 people
@@ -72,11 +74,16 @@ Mother–grandmother (and any other candidate pair) is examined automatically fo
 tree orientation whenever both are in the selected set; GenoLens never matrices
 every file in `data/`.
 
+Full-file compares can take **1–2 minutes**; the Next.js rewrite proxy timeout is
+raised (`experimental.proxyTimeout`) so long runs are not cut off at ~30s with a
+generic Internal Server Error.
+
 ## API
 
-- `POST /api/compare` — primary × candidates only.
+- `POST /api/compare` — primary × candidates only (available for tools/tests).
 - `POST /api/family-tree` — all pairs among the small selected set (≤8) +
-  `pedigree` graph. Response `pairs` includes candidate × candidate.
+  `pedigree` graph. Response `pairs` includes candidate × candidate. Relatives UI
+  uses this endpoint alone.
 
 Details: [API reference](api.md).
 

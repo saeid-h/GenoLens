@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Relatives compare / family-tree can exceed the default ~30s proxy cutoff.
+  experimental: {
+    proxyTimeout: 300_000,
+  },
   async rewrites() {
     return [
       {
