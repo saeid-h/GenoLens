@@ -237,6 +237,7 @@ def api_family_tree(body: FamilyTreeRequest) -> dict[str, Any]:
 
     sex_by_label: dict[str, str | None] = {}
     birth_by_label: dict[str, int | None] = {}
+    generation_hint_by_label: dict[str, str | None] = {}
     for path in selected:
         lab = sample_label(path)
         sid = sample_id(path)
@@ -247,12 +248,19 @@ def api_family_tree(body: FamilyTreeRequest) -> dict[str, Any]:
         meta = get_sample_meta(sid)
         by = meta.get("birth_year")
         birth_by_label[lab] = int(by) if by is not None else None
+        generation_hint_by_label[lab] = meta.get("generation")
 
-    pedigree = infer_pedigree(pairs, sex_by_label=sex_by_label, birth_year_by_label=birth_by_label)
+    pedigree = infer_pedigree(
+        pairs,
+        sex_by_label=sex_by_label,
+        birth_year_by_label=birth_by_label,
+        generation_hint_by_label=generation_hint_by_label,
+    )
     return {
         "disclaimer": DISCLAIMER,
         "primary_id": sample_id(primary),
         "pairs": [p.as_dict() for p in pairs],
+        "birth_years_used": birth_by_label,
         "pedigree": pedigree.as_dict(),
     }
 

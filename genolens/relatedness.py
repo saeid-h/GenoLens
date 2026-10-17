@@ -16,6 +16,10 @@ PARENT_CHILD_CM = 3400.0
 SIBLING_CM_MIN = 2200.0
 SIBLING_CM_MAX = 3400.0  # exclusive upper bound vs parent/child
 CLOSE_RELATIVE_CM = 1300.0
+# Parent–child pairs can show small IBD2 noise from array calling; only flip a
+# ≥3400 cM pair to sibling when IBD2 is clearly substantial (twins / extreme sibs).
+IBD2_SIBLING_AT_PARENT_CM = 500.0
+AGE_GAP_PARENT_YEARS = 15
 
 EdgeKind = Literal["parent_child", "sibling", "close_relative", "distant", "unrelated"]
 
@@ -190,15 +194,13 @@ def _extract_shared_cm(result: Any, segments: pd.DataFrame | None = None) -> flo
 def _relationship_from_sharing(shared_cm: float, ibd2_cm: float = 0.0) -> str:
     """Classify using total HIR cM plus IBD2 (siblings share IBD2; parent-child almost none)."""
     if shared_cm >= PARENT_CHILD_CM:
-        if ibd2_cm >= 200:
-            return "Full sibling (approx.; high IBD2)"
+        if ibd2_cm >= IBD2_SIBLING_AT_PARENT_CM:
+            return "Full sibling / twin-range (approx.; very high IBD2)"
         return "Parent/child or identical twin (approx.)"
     if shared_cm >= SIBLING_CM_MIN:
         if ibd2_cm >= 100:
-            return "Full sibling (approx.)"
-        if ibd2_cm < 20:
-            return "Parent/child range (low IBD2; confirm with ages)"
-        return "Full sibling / close relative (approx.)"
+            return "Full sibling (approx.; IBD2 supports siblings)"
+        return "Full sibling / grandparent / aunt-uncle range (approx.; confirm with ages)"
     return _relationship_from_cm(shared_cm)
 
 
@@ -358,21 +360,27 @@ def _edge_kind(shared_cm: float, ibd2_cm: float = 0.0) -> EdgeKind:
     """Classify edge from HIR cM + optional IBD2.
 
     Parent–child pairs share ~3400+ cM with almost no IBD2; full siblings share
-    substantial IBD2. When IBD2 is missing (0 / unknown), fall back to classic
-    ISOGG cM bands — do not treat zero IBD2 in the sibling band as parent–child.
+    substantial IBD2. Small IBD2 in the parent/child cM band is treated as noise.
+    When IBD2 is missing (0 / unknown) in the sibling cM band, keep sibling —
+    do not treat zero IBD2 there as parent–child.
     """
     if shared_cm >= PARENT_CHILD_CM:
-        if ibd2_cm >= 200:
+        if ibd2_cm >= IBD2_SIBLING_AT_PARENT_CM:
             return "sibling"
         return "parent_child"
     if shared_cm >= SIBLING_CM_MIN:
-        # Sibling band (~2200–3400). High IBD2 confirms; absent IBD2 stays sibling.
         return "sibling"
     if shared_cm >= CLOSE_RELATIVE_CM:
         return "close_relative"
     if shared_cm > 0:
         return "distant"
     return "unrelated"
+
+
+def _age_gap(ya: int | None, yb: int | None) -> int | None:
+    if isinstance(ya, int) and isinstance(yb, int):
+        return abs(ya - yb)
+    return None
 
 
 def _norm_sex(sex: str | None) -> str | None:
@@ -438,21 +446,24 @@ def infer_pedigree(
     sex_by_label: dict[str, str | None] | None = None,
     labels: list[str] | None = None,
     birth_year_by_label: dict[str, int | None] | None = None,
+    generation_hint_by_label: dict[str, str | None] | None = None,
 ) -> PedigreeEstimate:
     """Best-effort nuclear pedigree from pairwise shared-cM + IBD2 (+ optional ages).
 
     Practical algorithm for small local cohorts (e.g. 2–6 samples):
 
     1. Classify pairs using HIR cM and IBD2 (siblings share IBD2; parent-child almost none).
-    2. Orient parent→child with birth year when provided (older → younger); else sibling
-       triangulation; else leave undirected for the user to label.
-    3. Two adults both parent/child to the same child(ren) and ~unrelated to each
+    2. Birth-year gaps ≥15 years demote false “sibling” bands to parent→child (older→younger).
+    3. Orient parent→child with birth year when provided; else sibling triangulation;
+       else leave undirected for the user to label.
+    4. Two adults both parent/child to the same child(ren) and ~unrelated to each
        other are treated as co-parents (Mother/Father when SNP-derived sex is known).
-    4. Ambiguous graphs stay undirected / low-confidence with notes — never invent
+    5. Ambiguous graphs stay undirected / low-confidence with notes — never invent
        grandma as a sister.
     """
     sex_by_label = dict(sex_by_label or {})
     birth_year_by_label = dict(birth_year_by_label or {})
+    generation_hint_by_label = dict(generation_hint_by_label or {})
     lookup = _cm_lookup(pairs)
     if labels is None:
         labels = sorted({p.sample_a for p in pairs} | {p.sample_b for p in pairs})
@@ -465,6 +476,14 @@ def infer_pedigree(
     for key, pair in lookup.items():
         a, b = key
         kind = _edge_kind(pair.shared_cm, pair.ibd2_cm)
+        gap = _age_gap(birth_year_by_label.get(a), birth_year_by_label.get(b))
+        # Large age gap contradicts same-generation sibling placement.
+        if kind == "sibling" and gap is not None and gap >= AGE_GAP_PARENT_YEARS:
+            kind = "parent_child"
+            notes.append(
+                f"{a}–{b}: DNA looked sibling-range but birth years differ by {gap} "
+                f"— treating as parent/child and orienting by age."
+            )
         rel = pair.relationship or _relationship_from_sharing(pair.shared_cm, pair.ibd2_cm)
         if kind == "parent_child":
             pc_pairs.append((a, b, pair))
@@ -659,25 +678,25 @@ def infer_pedigree(
                 roles[lab] = "Sibling"
                 generation[lab] = max(generation.get(lab, 0), 1)
 
-    # Orient leftover PC edges when one end is already a known parent or child,
-    # or when birth years clearly separate generations.
+    # Orient leftover PC edges. Birth years win when they clearly separate
+    # generations — do not let an earlier Mother/Father role invert older→younger.
     for a, b, pair in pc_pairs:
         key = _pair_key(a, b)
         if key in placed_pc:
             continue
         ya = birth_year_by_label.get(a)
         yb = birth_year_by_label.get(b)
-        if _is_parent_role(roles.get(a)) and roles.get(b) in {"Child", "Sibling", "Unplaced"}:
-            src, tgt = a, b
-        elif _is_parent_role(roles.get(b)) and roles.get(a) in {"Child", "Sibling", "Unplaced"}:
-            src, tgt = b, a
-        elif isinstance(ya, int) and isinstance(yb, int) and abs(ya - yb) >= 15:
-            src, tgt = (a, b) if ya < yb else (b, a)
-            roles[src] = roles.get(src) if _is_parent_role(roles.get(src)) else (
-                "Mother" if _norm_sex(sex_by_label.get(src)) == "female" else
-                "Father" if _norm_sex(sex_by_label.get(src)) == "male" else "Parent"
-            )
-            roles[tgt] = "Child"
+        gap = _age_gap(ya, yb)
+        if gap is not None and gap >= AGE_GAP_PARENT_YEARS:
+            src, tgt = (a, b) if ya < yb else (b, a)  # type: ignore[operator]
+            if not _is_parent_role(roles.get(src)):
+                roles[src] = (
+                    "Mother" if _norm_sex(sex_by_label.get(src)) == "female" else
+                    "Father" if _norm_sex(sex_by_label.get(src)) == "male" else "Parent"
+                )
+            # Do not demote someone who is already a parent of others to "Child".
+            if not _is_parent_role(roles.get(tgt)):
+                roles[tgt] = "Child"
             generation[src] = min(generation.get(src, 0), 0)
             generation[tgt] = max(generation.get(tgt, 1), 1)
             directed.append(
@@ -695,6 +714,10 @@ def infer_pedigree(
             )
             placed_pc.add(key)
             continue
+        if _is_parent_role(roles.get(a)) and roles.get(b) in {"Child", "Sibling", "Unplaced"}:
+            src, tgt = a, b
+        elif _is_parent_role(roles.get(b)) and roles.get(a) in {"Child", "Sibling", "Unplaced"}:
+            src, tgt = b, a
         else:
             directed.append(
                 PedigreeEdge(
@@ -728,6 +751,33 @@ def infer_pedigree(
         generation[tgt] = max(generation.get(tgt, 0), generation.get(src, 0) + 1)
 
     directed.extend(other_edges)
+
+    # Prefer birth-year ordering for generation rows when enough ages exist.
+    aged = [(lab, birth_year_by_label.get(lab)) for lab in labels]
+    aged_known = [(lab, y) for lab, y in aged if isinstance(y, int)]
+    if len(aged_known) >= 2:
+        # Bucket by ~20-year bands from oldest → youngest as generation 0,1,2…
+        years_sorted = sorted({y for _, y in aged_known})
+        buckets: list[list[int]] = []
+        for y in years_sorted:
+            if not buckets or y - buckets[-1][0] >= AGE_GAP_PARENT_YEARS:
+                buckets.append([y])
+            else:
+                buckets[-1].append(y)
+        year_to_gen = {}
+        for gi, bucket in enumerate(buckets):
+            for y in bucket:
+                year_to_gen[y] = gi
+        for lab, y in aged_known:
+            generation[lab] = year_to_gen[y]
+            # Soft role upgrade from user generation hints when DNA left Unplaced.
+            hint = (generation_hint_by_label.get(lab) or "").strip().lower()
+            if roles[lab] == "Unplaced" and hint:
+                roles[lab] = hint.title()
+        notes.append(
+            "Generation rows ordered by birth year "
+            f"({', '.join(f'{lab}={y}' for lab, y in sorted(aged_known, key=lambda t: t[1]))})."
+        )
 
     # Normalize generations so the top generation is 0.
     if any(roles[lab] != "Unplaced" for lab in labels):
