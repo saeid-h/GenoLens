@@ -141,14 +141,27 @@ SNP list (`archaic_panel.json`).
 
 ## J — Polygenic scores
 
-**Intent:** Exploratory weighted allele scores from a local catalog.
+**Intent:** Show what a polygenic score *is* without implying clinical risk:
+a **weighted allele sum** for one trait
+(`dosage of effect allele × weight`, summed across SNPs).
 
-**Default:** Shipped `prs_demo.json` (toy/demo weights for plumbing).
+**UI removes ambiguity by showing:**
+
+- Plain-language definition on the page
+- **Demo mode** banner when using shipped toy weights
+- Per score: readout sentence, raw sum, panel max, SNPs called / missing,
+  bar for “where you sit on *this tiny panel only*”, coverage note,
+  “what it is / is not”, and expandable SNP contributions
+
+**Default:** Shipped `prs_demo.json` (`mode: demo`) — synthetic weights for
+education/plumbing (height / BMI-research / caffeine-research toys).
 
 **Optional:** Place a converted PGS Catalog scoring JSON at
-`data/reference/prs/catalog.json`.
+`data/reference/prs/catalog.json` (`mode` becomes `catalog`).
 
-**Not claimed:** Clinical risk prediction or diagnosis.
+**Not claimed:** Height in cm, BMI value, disease probability, diagnosis, or
+prescribing guidance. A high demo band only means more weighted alleles on that
+small panel, not a trait measurement.
 
 ---
 

@@ -1,10 +1,15 @@
 {
-  "disclaimer": "Demo polygenic score weights for engineering only. Replace with PGS Catalog scoring files for real exploratory scores. Not a clinical risk prediction.",
+  "disclaimer": "These are synthetic DEMO weights for plumbing and education only — not PGS Catalog scores, not height/BMI estimates, and not medical risk. Replace with an open PGS Catalog file under data/reference/prs/catalog.json for real exploratory scores.",
+  "mode": "demo",
+  "how_to_read": "Each score is a weighted sum of effect alleles on a tiny SNP list. Higher raw score only means more of those weighted alleles on your chip — it is not a centimeter, kg/m², or disease probability. Coverage (variants used) matters: a score from 1 SNP is almost meaningless.",
   "scores": [
     {
       "id": "DEMO_HEIGHT",
-      "trait": "Height (demo)",
-      "citation": "Synthetic demo weights — not from PGS Catalog",
+      "trait": "Height",
+      "trait_plain": "Adult height tendency (demo panel)",
+      "what_it_is": "A toy sum of a few height-associated SNPs. Real height PRS use hundreds to thousands of markers and still do not predict your height precisely.",
+      "what_it_is_not": "Not your height in cm/inches. Not a growth diagnosis.",
+      "citation": "Synthetic GenoLens demo — not from PGS Catalog",
       "variants": [
         {"rsid": "rs1042725", "effect_allele": "T", "weight": 0.02},
         {"rsid": "rs143384", "effect_allele": "G", "weight": 0.015},
@@ -15,14 +20,30 @@
     },
     {
       "id": "DEMO_BMI",
-      "trait": "BMI (demo)",
-      "citation": "Synthetic demo weights — not from PGS Catalog",
+      "trait": "BMI / body-mass research",
+      "trait_plain": "Body-mass research alleles (demo panel)",
+      "what_it_is": "A toy sum centered on well-known FTO-region SNPs used in BMI research. Real BMI PRS are much larger panels.",
+      "what_it_is_not": "Not your BMI, weight, or a diet plan. Not obesity diagnosis.",
+      "citation": "Synthetic GenoLens demo — not from PGS Catalog",
       "variants": [
         {"rsid": "rs9939609", "effect_allele": "A", "weight": 0.08},
         {"rsid": "rs1558902", "effect_allele": "A", "weight": 0.06},
         {"rsid": "rs1421085", "effect_allele": "C", "weight": 0.05},
         {"rsid": "rs17817449", "effect_allele": "G", "weight": 0.04},
         {"rsid": "rs1121980", "effect_allele": "A", "weight": 0.03}
+      ]
+    },
+    {
+      "id": "DEMO_CAFFEINE",
+      "trait": "Caffeine metabolism research",
+      "trait_plain": "Caffeine-clearance research alleles (demo)",
+      "what_it_is": "A tiny weighted sum using CYP1A2-related markers. Overlaps the idea of the single-SNP caffeine card in Wellness/Pharma — here shown as a multi-SNP toy score.",
+      "what_it_is_not": "Not a coffee prescription or safe-intake limit.",
+      "citation": "Synthetic GenoLens demo — not from PGS Catalog",
+      "variants": [
+        {"rsid": "rs762551", "effect_allele": "C", "weight": 0.1},
+        {"rsid": "rs2472297", "effect_allele": "T", "weight": 0.05},
+        {"rsid": "rs4410790", "effect_allele": "C", "weight": 0.04}
       ]
     }
   ]

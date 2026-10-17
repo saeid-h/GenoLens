@@ -793,6 +793,92 @@ button.linkish {
   margin: 1.5rem auto;
 }
 
+.prs-hero {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  gap: 1.25rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.prs-hero-art {
+  height: 100px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.prs-hero-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.prs-mode-banner {
+  background: #fff8e8;
+  border: 1px solid #efd9a8;
+  color: #6a5420;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.prs-card-grid {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.prs-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.15rem 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.prs-card-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  margin: 0.2rem 0 0.5rem;
+}
+
+.prs-readout {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.85rem;
+  line-height: 1.4;
+}
+
+.prs-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.prs-metrics .label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.prs-metrics .value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.prs-bar-block {
+  margin: 0.5rem 0 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .prs-hero {
+    grid-template-columns: 1fr;
+  }
+  .prs-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
