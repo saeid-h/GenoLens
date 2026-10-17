@@ -29,6 +29,7 @@ class PairResult:
     shared_cm: float
     shared_segments: int
     relationship: str | None
+    ibd2_cm: float = 0.0
     segments: pd.DataFrame = field(default_factory=pd.DataFrame)
     chrom_summary: pd.DataFrame = field(default_factory=pd.DataFrame)
     error: str | None = None
@@ -39,6 +40,7 @@ class PairResult:
             "sample_b": self.sample_b,
             "shared_cm": self.shared_cm,
             "shared_segments": self.shared_segments,
+            "ibd2_cm": self.ibd2_cm,
             "relationship": self.relationship,
             "error": self.error,
         }
@@ -146,6 +148,20 @@ def _extract_segments(result: Any) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
+def _sum_cm_frame(frame: Any) -> float:
+    if isinstance(frame, pd.DataFrame) and not frame.empty:
+        col = _cm_column(frame)
+        if col:
+            return float(frame[col].sum())
+    return 0.0
+
+
+def _extract_ibd2_cm(result: Any) -> float:
+    if isinstance(result, dict):
+        return _sum_cm_frame(result.get("two_chrom_shared_dna"))
+    return 0.0
+
+
 def _extract_shared_cm(result: Any, segments: pd.DataFrame | None = None) -> float:
     """Total shared cM. Prefer one-chrom (HIR) total; fall back to segment sum."""
     if isinstance(result, dict):
@@ -153,16 +169,12 @@ def _extract_shared_cm(result: Any, segments: pd.DataFrame | None = None) -> flo
             if key in result and result[key] is not None:
                 return float(result[key])
         # lineage 4.x: one_chrom_shared_dna / two_chrom_shared_dna with column `cMs`
-        one = result.get("one_chrom_shared_dna")
-        if isinstance(one, pd.DataFrame) and not one.empty:
-            col = _cm_column(one)
-            if col:
-                return float(one[col].sum())
-        two = result.get("two_chrom_shared_dna")
-        if isinstance(two, pd.DataFrame) and not two.empty:
-            col = _cm_column(two)
-            if col:
-                return float(two[col].sum())
+        one_cm = _sum_cm_frame(result.get("one_chrom_shared_dna"))
+        if one_cm > 0:
+            return one_cm
+        two_cm = _sum_cm_frame(result.get("two_chrom_shared_dna"))
+        if two_cm > 0:
+            return two_cm
 
     segs = segments if segments is not None else _extract_segments(result)
     if isinstance(segs, pd.DataFrame) and not segs.empty:
@@ -173,6 +185,21 @@ def _extract_shared_cm(result: Any, segments: pd.DataFrame | None = None) -> flo
         if col:
             return float(segs[col].sum())
     return 0.0
+
+
+def _relationship_from_sharing(shared_cm: float, ibd2_cm: float = 0.0) -> str:
+    """Classify using total HIR cM plus IBD2 (siblings share IBD2; parent-child almost none)."""
+    if shared_cm >= PARENT_CHILD_CM:
+        if ibd2_cm >= 200:
+            return "Full sibling (approx.; high IBD2)"
+        return "Parent/child or identical twin (approx.)"
+    if shared_cm >= SIBLING_CM_MIN:
+        if ibd2_cm >= 100:
+            return "Full sibling (approx.)"
+        if ibd2_cm < 20:
+            return "Parent/child range (low IBD2; confirm with ages)"
+        return "Full sibling / close relative (approx.)"
+    return _relationship_from_cm(shared_cm)
 
 
 def _chrom_summary(segments: pd.DataFrame) -> pd.DataFrame:
@@ -241,11 +268,12 @@ def compare_pair(
         result = lin.find_shared_dna([s1, s2], save_output=False)
         segments = _extract_segments(result)
         shared_cm = _extract_shared_cm(result, segments)
+        ibd2_cm = _extract_ibd2_cm(result)
         rel = None
         if isinstance(result, dict):
             rel = result.get("relationship") or result.get("predicted_relationship")
         if not rel:
-            rel = _relationship_from_cm(shared_cm)
+            rel = _relationship_from_sharing(shared_cm, ibd2_cm)
         # Count HIR segments for the headline metric when typed.
         if not segments.empty and "share_type" in segments.columns:
             n_segs = int((segments["share_type"] == "one_chrom").sum()) or len(segments)
@@ -258,6 +286,7 @@ def compare_pair(
             path_b=path_b,
             shared_cm=float(shared_cm),
             shared_segments=n_segs,
+            ibd2_cm=float(ibd2_cm),
             relationship=str(rel) if rel else None,
             segments=segments if segments is not None else pd.DataFrame(),
             chrom_summary=_chrom_summary(segments),
@@ -270,13 +299,31 @@ def compare_pair(
             path_b=path_b,
             shared_cm=0.0,
             shared_segments=0,
+            ibd2_cm=0.0,
             relationship=None,
             error=str(exc),
         )
 
 
+def compare_primary_to_candidates(
+    primary: Path,
+    candidates: list[Path],
+) -> list[PairResult]:
+    """Compare one primary genome to each candidate (not a full N×N matrix)."""
+    primary = Path(primary)
+    results: list[PairResult] = []
+    for cand in candidates:
+        cand = Path(cand)
+        if cand.resolve() == primary.resolve():
+            continue
+        results.append(compare_pair(primary, cand))
+    return results
+
+
 def compare_all_pairs(paths: list[Path]) -> list[PairResult]:
-    """Compare every unordered pair among ``paths``."""
+    """Compare every unordered pair among ``paths`` (use only for small selected sets)."""
+    if len(paths) > 8:
+        raise ValueError("Full pairwise compare is capped at 8 samples; select fewer candidates.")
     results: list[PairResult] = []
     for a, b in combinations(paths, 2):
         results.append(compare_pair(a, b))
@@ -307,10 +354,19 @@ def _pair_key(a: str, b: str) -> tuple[str, str]:
     return tuple(sorted((a, b)))  # type: ignore[return-value]
 
 
-def _edge_kind(shared_cm: float) -> EdgeKind:
+def _edge_kind(shared_cm: float, ibd2_cm: float = 0.0) -> EdgeKind:
+    """Classify edge from HIR cM + optional IBD2.
+
+    Parent–child pairs share ~3400+ cM with almost no IBD2; full siblings share
+    substantial IBD2. When IBD2 is missing (0 / unknown), fall back to classic
+    ISOGG cM bands — do not treat zero IBD2 in the sibling band as parent–child.
+    """
     if shared_cm >= PARENT_CHILD_CM:
+        if ibd2_cm >= 200:
+            return "sibling"
         return "parent_child"
     if shared_cm >= SIBLING_CM_MIN:
+        # Sibling band (~2200–3400). High IBD2 confirms; absent IBD2 stays sibling.
         return "sibling"
     if shared_cm >= CLOSE_RELATIVE_CM:
         return "close_relative"
@@ -381,20 +437,22 @@ def infer_pedigree(
     pairs: list[PairResult],
     sex_by_label: dict[str, str | None] | None = None,
     labels: list[str] | None = None,
+    birth_year_by_label: dict[str, int | None] | None = None,
 ) -> PedigreeEstimate:
-    """Best-effort nuclear pedigree from pairwise shared-cM bands.
+    """Best-effort nuclear pedigree from pairwise shared-cM + IBD2 (+ optional ages).
 
     Practical algorithm for small local cohorts (e.g. 2–6 samples):
 
-    1. Classify pairs: parent/child (≥3400 cM), sibling (2200–3400), else weaker.
-    2. Autosomal parent/child cM is symmetric — orient edges using sibling structure:
-       someone parent/child to two+ mutual siblings is the parent generation.
+    1. Classify pairs using HIR cM and IBD2 (siblings share IBD2; parent-child almost none).
+    2. Orient parent→child with birth year when provided (older → younger); else sibling
+       triangulation; else leave undirected for the user to label.
     3. Two adults both parent/child to the same child(ren) and ~unrelated to each
        other are treated as co-parents (Mother/Father when SNP-derived sex is known).
     4. Ambiguous graphs stay undirected / low-confidence with notes — never invent
-       impossible multi-parent cycles.
+       grandma as a sister.
     """
     sex_by_label = dict(sex_by_label or {})
+    birth_year_by_label = dict(birth_year_by_label or {})
     lookup = _cm_lookup(pairs)
     if labels is None:
         labels = sorted({p.sample_a for p in pairs} | {p.sample_b for p in pairs})
@@ -406,8 +464,8 @@ def infer_pedigree(
 
     for key, pair in lookup.items():
         a, b = key
-        kind = _edge_kind(pair.shared_cm)
-        rel = pair.relationship or _relationship_from_cm(pair.shared_cm)
+        kind = _edge_kind(pair.shared_cm, pair.ibd2_cm)
+        rel = pair.relationship or _relationship_from_sharing(pair.shared_cm, pair.ibd2_cm)
         if kind == "parent_child":
             pc_pairs.append((a, b, pair))
         elif kind == "sibling":
@@ -493,10 +551,14 @@ def infer_pedigree(
             conflict = False
             for other in chosen:
                 pk = _pair_key(cand, other)
-                if pk in lookup and _edge_kind(lookup[pk].shared_cm) in {"parent_child", "sibling"}:
+                if pk in lookup and _edge_kind(lookup[pk].shared_cm, lookup[pk].ibd2_cm) in {
+                    "parent_child",
+                    "sibling",
+                }:
+                    kind = _edge_kind(lookup[pk].shared_cm, lookup[pk].ibd2_cm)
                     notes.append(
                         f"Skipped {cand} as co-parent with {other}: pair looks "
-                        f"{_edge_kind(lookup[pk].shared_cm)} ({lookup[pk].shared_cm:.0f} cM)."
+                        f"{kind} ({lookup[pk].shared_cm:.0f} cM, IBD2={lookup[pk].ibd2_cm:.0f})."
                     )
                     conflict = True
                     break
@@ -597,15 +659,42 @@ def infer_pedigree(
                 roles[lab] = "Sibling"
                 generation[lab] = max(generation.get(lab, 0), 1)
 
-    # Orient leftover PC edges when one end is already a known parent or child.
+    # Orient leftover PC edges when one end is already a known parent or child,
+    # or when birth years clearly separate generations.
     for a, b, pair in pc_pairs:
         key = _pair_key(a, b)
         if key in placed_pc:
             continue
+        ya = birth_year_by_label.get(a)
+        yb = birth_year_by_label.get(b)
         if _is_parent_role(roles.get(a)) and roles.get(b) in {"Child", "Sibling", "Unplaced"}:
             src, tgt = a, b
         elif _is_parent_role(roles.get(b)) and roles.get(a) in {"Child", "Sibling", "Unplaced"}:
             src, tgt = b, a
+        elif isinstance(ya, int) and isinstance(yb, int) and abs(ya - yb) >= 15:
+            src, tgt = (a, b) if ya < yb else (b, a)
+            roles[src] = roles.get(src) if _is_parent_role(roles.get(src)) else (
+                "Mother" if _norm_sex(sex_by_label.get(src)) == "female" else
+                "Father" if _norm_sex(sex_by_label.get(src)) == "male" else "Parent"
+            )
+            roles[tgt] = "Child"
+            generation[src] = min(generation.get(src, 0), 0)
+            generation[tgt] = max(generation.get(tgt, 1), 1)
+            directed.append(
+                PedigreeEdge(
+                    source=src,
+                    target=tgt,
+                    kind="parent_child",
+                    shared_cm=pair.shared_cm,
+                    relationship=pair.relationship
+                    or _relationship_from_sharing(pair.shared_cm, pair.ibd2_cm),
+                    directed=True,
+                    confidence="high",
+                    note=f"Oriented by birth year ({ya} vs {yb}).",
+                )
+            )
+            placed_pc.add(key)
+            continue
         else:
             directed.append(
                 PedigreeEdge(
@@ -613,10 +702,11 @@ def infer_pedigree(
                     target=b,
                     kind="parent_child",
                     shared_cm=pair.shared_cm,
-                    relationship=pair.relationship or _relationship_from_cm(pair.shared_cm),
+                    relationship=pair.relationship
+                    or _relationship_from_sharing(pair.shared_cm, pair.ibd2_cm),
                     directed=False,
                     confidence="low",
-                    note="Parent/child-range cM; generation orientation ambiguous.",
+                    note="Parent/child-range cM; set birth years or label the relationship.",
                 )
             )
             notes.append(f"{a}–{b}: parent/child band without clear parent orientation.")

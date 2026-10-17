@@ -13,7 +13,7 @@ from genolens.relatedness import (
 )
 
 
-def _pair(a: str, b: str, cm: float) -> PairResult:
+def _pair(a: str, b: str, cm: float, ibd2: float = 0.0) -> PairResult:
     from genolens.relatedness import _relationship_from_cm as rel
 
     return PairResult(
@@ -24,6 +24,7 @@ def _pair(a: str, b: str, cm: float) -> PairResult:
         shared_cm=cm,
         shared_segments=10 if cm > 0 else 0,
         relationship=rel(cm),
+        ibd2_cm=ibd2,
     )
 
 
@@ -55,11 +56,11 @@ def test_compare_pair_synthetic(synthetic_genome_a, synthetic_genome_b):
 def test_infer_pedigree_nuclear_family():
     """Mother+Father → two children (sibling-range); spouses ~0 cM."""
     pairs = [
-        _pair("Farideh", "Saeid", 3500),
-        _pair("Farideh", "Soltan", 3480),
-        _pair("Mahmoud", "Saeid", 3520),
-        _pair("Mahmoud", "Soltan", 3490),
-        _pair("Saeid", "Soltan", 2550),
+        _pair("Farideh", "Saeid", 3500, ibd2=0),
+        _pair("Farideh", "Soltan", 3480, ibd2=0),
+        _pair("Mahmoud", "Saeid", 3520, ibd2=0),
+        _pair("Mahmoud", "Soltan", 3490, ibd2=0),
+        _pair("Saeid", "Soltan", 2550, ibd2=800),
         _pair("Farideh", "Mahmoud", 0),
     ]
     sex = {"Farideh": "Female", "Mahmoud": "Male", "Saeid": "Male", "Soltan": "Female"}
