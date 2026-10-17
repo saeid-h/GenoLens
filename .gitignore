@@ -1,7 +1,24 @@
 # Private genome files — never commit
 data/*.txt
+data/*.csv
+data/*.tsv
+data/*.vcf
+data/*.vcf.gz
+data/*.zip
+data/sample_meta.json
 data/reference/
 !data/.gitkeep
+
+# Web
+web/node_modules/
+web/.next/
+web/out/
+web/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# API / caches
+.cache/
+*.pyc
 
 # Runtime downloads from snps/lineage (genetic maps, chip clusters)
 resources/

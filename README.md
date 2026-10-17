@@ -1,61 +1,83 @@
 # GenoLens
 
-Local, private viewer for 23andMe raw data. Explore trait / pharmacogenetic markers, pairwise relatedness, broad ancestry, and affinity to ancient genomes. **Nothing is uploaded.**
+Local, private DNA reports inspired by consumer genetics sites—**GenoLens branded**, not a clone. Raw genomes stay on disk. Nothing is uploaded.
 
-## Limits (read these)
+**Primary UI:** Next.js report app (`web/`) + FastAPI (`api/`).  
+**Legacy UI:** Streamlit (`streamlit run genolens/app.py`).
 
-- **Not medical advice.** Microarray data covers a tiny fraction of the genome. Panel notes are exploratory literature summaries, not diagnoses.
-- **Ancient matches are population affinity**, not proof you descend from a named king or pharaoh. Royal Egyptian and Achaemenid genomes are not publicly released. Ancient samples are low-coverage; IBD segment matching like modern relative-finder tools does not apply the same way.
+## Limits
+
+- Exploratory only — not medical advice or clinical diagnosis.
+- Ancient matches are population affinity, not proof of descent from named royals.
+- Pedigree direction needs IBD2 and/or birth years; shared cM alone is symmetric.
+
+## Agent rules
+
+See [AGENTS.md](AGENTS.md).
 
 ## Setup
 
 ```bash
 cd /path/to/GenoLens
-python3.12 -m venv .venv   # Python 3.10+ required
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+cd web && npm install && cd ..
 ```
 
-Superpopulation calls use a bundled AIM allele-frequency likelihood by default (no extra install). Optional `ezancestry` via `pip install -e ".[ancestry]"` needs Python <3.12 and pandas 1.x, so use a separate 3.10/3.11 env if you want that path.
+Place genotype files in `data/` (gitignored). Supported via `snps`: 23andMe, AncestryDNA, FTDNA, MyHeritage, VCF, and more.
 
-Place your 23andMe raw exports as `data/*.txt` (already gitignored). The app lists those files and defaults the primary sample to the Saeid Hosseinipoor v5 export when present.
+## Run (professional UI)
 
-## Run
+Terminal 1 — API (localhost only):
+
+```bash
+source .venv/bin/activate
+uvicorn api.main:app --host 127.0.0.1 --port 8000
+```
+
+Terminal 2 — web:
+
+```bash
+cd web
+npm run dev
+```
+
+Open http://localhost:3000
+
+### Reports (A→J)
+
+Ancestry → Haplogroups → Traits → Wellness → Pharmacogenetics → Health → Relatives (primary + candidates) → Ancient → Archaic → Polygenic scores.
+
+Relatives never auto-builds an N×N matrix over every file. Set optional birth years under **Settings → Samples & ages**.
+
+## Legacy Streamlit
 
 ```bash
 streamlit run genolens/app.py
 ```
 
-Pages: **Overview**, **Health**, **Compare**, **Ancestry**, **Ancient**.
+## Open reference data
 
-## Ancient reference (AADR)
+| Need | Source |
+|------|--------|
+| Ancient | [AADR](https://doi.org/10.7910/DVN/FFIDCW) / [Poseidon archive](https://server.poseidon-adna.org/explorer/aadr-archive) → `data/reference/` |
+| PRS | [PGS Catalog](https://www.pgscatalog.org/) → optional `data/reference/prs/catalog.json` (demo weights ship in-package) |
 
-1. First run can create a **synthetic demo panel** so the Ancient page works offline.
-2. For real matches, download **AADR v66 1240K** from the [Poseidon AADR archive](https://server.poseidon-adna.org/explorer/aadr-archive) into `data/reference/` (gitignored; ~tens of thousands of samples).
-3. Prepare a reduced panel intersecting positions present on your v5 chip, dropping strand-ambiguous A/T and C/G SNPs, then score allele-sharing distance and project yourself onto a PCA fit from the reference only.
-
-Helper entry points live in `genolens.reference` (`download_aadr`, `extract_aadr`, `prepare_panel_from_eigenstrat`, `build_demo_panel`).
-
-### Citation
-
-When using AADR data, cite:
-
-1. Mallick, S., & Reich, D. — Allen Ancient DNA Resource (AADR), Harvard Dataverse (version you download).
-2. Mallick et al. (2024), *The Allen Ancient DNA Resource (AADR): a curated compendium of ancient human genomes*, Scientific Data.
+Helpers: `genolens.reference`, `genolens.reference_catalog`.
 
 ## Tests
 
 ```bash
-pytest
+pytest -q
 ```
 
-Tests use tiny synthetic genotype files only — never the private genomes under `data/`.
+## Remote
+
+GitHub: https://github.com/saeid-h/GenoLens.git — push only when asked; never commit `data/*.txt` or `my-docs/`.
 
 ## Stack
 
-- [`snps`](https://github.com/apriha/snps) — load 23andMe files
-- [`lineage`](https://github.com/apriha/lineage) — shared segments / relatedness
-- Bundled AIM panel — default 1000 Genomes superpopulation likelihood (no ezancestry)
-- Optional `genolens[ancestry]` (`ezancestry`) — alternate `snps.predict_ancestry` path; Python <3.12 + pandas 1.x only
-- `scikit-learn` — PCA projection for ancient affinity
-- Streamlit — local UI
+- `genolens` — ingest (`snps`), relatedness (`lineage`), AIM ancestry, panels, ancient, archaic, PRS
+- `api` — FastAPI
+- `web` — Next.js App Router (Fraunces + Source Sans 3, teal/coral brand)
