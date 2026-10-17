@@ -61,14 +61,22 @@ the user to set relationship / ages. It must **not** invent “grandma as sister
 ## UI workflow
 
 1. Settings → choose primary; optionally enter birth years.
-2. Reports → DNA Relatives → select candidates (searchable list).
-3. Compare selected → table of cM / IBD2 / relationship band.
-4. Build family tree → top-down SVG generations + edge table + notes.
+2. Reports → DNA Relatives → select candidates (chips with birth-year badges).
+3. Compare selected → pedigree hero, then relationship cards:
+   - **With you** — primary × each candidate
+   - **Among selected relatives** — candidate × candidate (e.g. mother ×
+     grandmother) when the selected set has 3–8 people
+4. Edge table + ASCII pedigree under **Details**.
+
+Mother–grandmother (and any other candidate pair) is examined automatically for
+tree orientation whenever both are in the selected set; GenoLens never matrices
+every file in `data/`.
 
 ## API
 
 - `POST /api/compare` — primary × candidates only.
-- `POST /api/family-tree` — pairs + `pedigree` graph.
+- `POST /api/family-tree` — all pairs among the small selected set (≤8) +
+  `pedigree` graph. Response `pairs` includes candidate × candidate.
 
 Details: [API reference](api.md).
 

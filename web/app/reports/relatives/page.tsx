@@ -2,18 +2,47 @@
 
 import { useMemo, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
+import { IllEmptyRelatives } from "@/components/illustrations";
 import { PedigreeView } from "@/components/PedigreeView";
 import { compare, familyTree } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
+type Pair = {
+  sample_a: string;
+  sample_b: string;
+  shared_cm: number;
+  ibd2_cm?: number;
+  shared_segments?: number;
+  relationship?: string;
+  error?: string;
+};
+
+function pairKey(p: Pair) {
+  return [p.sample_a, p.sample_b].sort().join("::");
+}
+
+function otherLabel(p: Pair, primaryLabel: string | undefined) {
+  if (!primaryLabel) return p.sample_b;
+  if (p.sample_a === primaryLabel) return p.sample_b;
+  if (p.sample_b === primaryLabel) return p.sample_a;
+  return `${p.sample_a} ↔ ${p.sample_b}`;
+}
+
+function involvesPrimary(p: Pair, primaryLabel: string | undefined) {
+  if (!primaryLabel) return true;
+  return p.sample_a === primaryLabel || p.sample_b === primaryLabel;
+}
+
 export default function RelativesPage() {
   const { primaryId, samples } = useSample();
   const [selected, setSelected] = useState<string[]>([]);
-  const [pairs, setPairs] = useState<any[]>([]);
+  const [pairs, setPairs] = useState<Pair[]>([]);
   const [pedigree, setPedigree] = useState<any | null>(null);
   const [birthYearsUsed, setBirthYearsUsed] = useState<Record<string, number | null>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const primaryLabel = samples.find((s) => s.id === primaryId)?.label;
 
   const candidates = useMemo(
     () => samples.filter((s) => s.id !== primaryId),
@@ -32,8 +61,15 @@ export default function RelativesPage() {
     setError(null);
     try {
       const cmp = await compare(primaryId, selected);
-      setPairs((cmp.pairs as any[]) || []);
       const tree = await familyTree(primaryId, selected);
+      const treePairs = ((tree.pairs as Pair[]) || []) as Pair[];
+      const cmpPairs = ((cmp.pairs as Pair[]) || []) as Pair[];
+      // Prefer family-tree pairs (includes candidate×candidate); fill from compare if needed
+      const merged = new Map<string, Pair>();
+      for (const p of [...cmpPairs, ...treePairs]) {
+        merged.set(pairKey(p), p);
+      }
+      setPairs([...merged.values()].sort((a, b) => Number(b.shared_cm) - Number(a.shared_cm)));
       setPedigree(tree.pedigree || null);
       setBirthYearsUsed((tree.birth_years_used as Record<string, number | null>) || {});
     } catch (e) {
@@ -43,88 +79,62 @@ export default function RelativesPage() {
     }
   };
 
+  const withYou = pairs.filter((p) => involvesPrimary(p, primaryLabel));
+  const amongRelatives = pairs.filter((p) => !involvesPrimary(p, primaryLabel));
+
   return (
     <div className="panel">
       <h1>DNA Relatives</h1>
       <p>
         Pick candidates, then run compare. Birth years from{" "}
-        <a href="/settings/samples">Settings → Samples &amp; ages</a> are applied when you
-        run — save ages first, then click Compare again to refresh the tree.
+        <a href="/settings/samples">Settings → Samples &amp; ages</a> are applied when you run —
+        save ages first, then click Compare again to refresh the tree.
+      </p>
+      <p className="muted">
+        When you select mother and grandmother (or any 3–8 people including you), we also compare
+        them to each other to orient the tree.
       </p>
       <Disclaimer text="We never auto-matrix every file in data/. Shared cM alone cannot tell parent from child; ages and IBD2 orient the tree." />
-      <div className="controls">
-        <div style={{ flex: 1 }}>
-          <div className="muted" style={{ marginBottom: "0.4rem" }}>
-            Candidates{" "}
-            <button type="button" className="linkish" onClick={selectAll}>
-              Select all
-            </button>
-          </div>
-          <div className="candidate-list">
-            {candidates.map((s) => {
-              const year = (s.meta as { birth_year?: number } | undefined)?.birth_year;
-              return (
-                <label key={s.id}>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(s.id)}
-                    onChange={() => toggle(s.id)}
-                  />{" "}
-                  {s.label}
-                  {year != null ? <span className="muted"> (b. {year})</span> : (
-                    <span className="muted"> (no birth year)</span>
-                  )}
-                </label>
-              );
-            })}
-          </div>
+
+      <div className="relatives-sticky">
+        <div className="candidate-chips">
+          {candidates.map((s) => {
+            const year = (s.meta as { birth_year?: number } | undefined)?.birth_year;
+            const on = selected.includes(s.id);
+            return (
+              <button
+                key={s.id}
+                type="button"
+                className={`chip ${on ? "chip-on" : ""}`}
+                onClick={() => toggle(s.id)}
+              >
+                {s.label}
+                {year != null ? <span className="chip-badge">b. {year}</span> : null}
+              </button>
+            );
+          })}
         </div>
-        <button className="cta" disabled={busy || selected.length === 0} onClick={run}>
-          {busy ? "Comparing… (may take a minute)" : "Compare selected"}
-        </button>
+        <div className="relatives-actions">
+          <button type="button" className="linkish" onClick={selectAll}>
+            Select all
+          </button>
+          <button className="cta" disabled={busy || selected.length === 0} onClick={run}>
+            {busy ? "Comparing… (may take a minute)" : "Compare selected"}
+          </button>
+        </div>
       </div>
+
       {error && <p className="muted">{error}</p>}
-      {!pedigree && !busy && (
-        <p className="muted">
-          No tree yet — select at least one candidate and click Compare selected. The graph
-          appears below the shared-DNA table.
-        </p>
+
+      {!pedigree && !busy && pairs.length === 0 && (
+        <div className="empty-relatives">
+          <IllEmptyRelatives />
+        </div>
       )}
-      {pairs.length > 0 && (
-        <>
-          <h2>Shared DNA vs primary</h2>
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Candidate</th>
-                <th>Shared cM</th>
-                <th>IBD2 cM</th>
-                <th>Segments</th>
-                <th>Estimate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pairs.map((p) => {
-                const primaryLabel = samples.find((s) => s.id === primaryId)?.label;
-                const other =
-                  p.sample_b === primaryLabel ? p.sample_a : p.sample_a === primaryLabel ? p.sample_b : p.sample_b;
-                return (
-                  <tr key={`${p.sample_a}-${p.sample_b}`}>
-                    <td>{other}</td>
-                    <td>{Number(p.shared_cm).toFixed(1)}</td>
-                    <td>{Number(p.ibd2_cm || 0).toFixed(1)}</td>
-                    <td>{p.shared_segments}</td>
-                    <td>{p.relationship || p.error || "—"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </>
-      )}
+
       {pedigree && (
         <>
-          <h2>Family tree (by generation)</h2>
+          <h2>Family tree</h2>
           {Object.keys(birthYearsUsed).length > 0 && (
             <p className="muted">
               Birth years used:{" "}
@@ -139,7 +149,50 @@ export default function RelativesPage() {
             notes={pedigree.notes}
             birthYears={birthYearsUsed}
             asciiTree={pedigree.ascii_tree}
+            detailsCollapsed
           />
+        </>
+      )}
+
+      {withYou.length > 0 && (
+        <>
+          <h2>With you</h2>
+          <div className="relationship-cards">
+            {withYou.map((p) => (
+              <div className="relationship-card" key={pairKey(p)}>
+                <div className="relationship-who">{otherLabel(p, primaryLabel)}</div>
+                <div className="relationship-label">{p.relationship || p.error || "—"}</div>
+                <div className="muted">
+                  {Number(p.shared_cm).toFixed(0)} cM · IBD2 {Number(p.ibd2_cm || 0).toFixed(0)} cM ·{" "}
+                  {p.shared_segments ?? "—"} segments
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {amongRelatives.length > 0 && (
+        <>
+          <h2>Among selected relatives</h2>
+          <p className="muted">
+            Candidate × candidate pairs (for example mother × grandmother) used to triangulate the
+            tree.
+          </p>
+          <div className="relationship-cards">
+            {amongRelatives.map((p) => (
+              <div className="relationship-card" key={pairKey(p)}>
+                <div className="relationship-who">
+                  {p.sample_a} ↔ {p.sample_b}
+                </div>
+                <div className="relationship-label">{p.relationship || p.error || "—"}</div>
+                <div className="muted">
+                  {Number(p.shared_cm).toFixed(0)} cM · IBD2 {Number(p.ibd2_cm || 0).toFixed(0)} cM ·{" "}
+                  {p.shared_segments ?? "—"} segments
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>

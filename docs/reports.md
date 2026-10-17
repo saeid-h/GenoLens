@@ -30,8 +30,10 @@ open AIM panel (`genolens/data/aim_panel.json`; rebuild with
 has **no** Iranian / Levant / North Africa panels — West Asian samples often look
 closest to South Asian (GIH/ITU/PJL) and/or Southern European (TSI/IBS).
 
-**UI:** Regional bars + table of closest 1000 Genomes populations; markers used /
-total; temperature-scaled likelihood to reduce fake 99% certainty.
+**UI:** Regional **pie + bars**, table of closest 1000 Genomes populations (linked
+to `/catalog/ancestry/[code]`), markers used / total; temperature-scaled
+likelihood to reduce fake 99% certainty. Catalog blurbs are first-party GenoLens
+copy — reference populations, not scraped ethnicity pages.
 
 **Upgrade path:** Human Origins / AADR modern references for MENA-aware labels.
 
@@ -61,8 +63,10 @@ tree — expect broader branches (CT/CF/P), not terminal 23andMe labels.
 **Intent:** Non-clinical trait markers (taste, pigmentation, earwax, muscle,
 research associations) from the curated panel.
 
-**UI:** Table columns **What this is** (plain summary) → gene → **Your DNA** →
-**What your result means** (genotype-specific plain language).
+**UI:** **Prediction cards** first (topic illustration + headline like “Likely
+brown eyes”), optional **phenotype sketch** (SVG face from a few SNPs — playful,
+not a photo), then full marker table. Panel markers may carry `topic` /
+`predictions` fields; API hits include resolved `prediction`.
 
 ---
 
@@ -71,7 +75,7 @@ research associations) from the curated panel.
 **Intent:** Metabolism / alcohol / folate / sleep-adjacent markers
 (`metabolism`, `wellness` categories).
 
-**Copy:** Plain-language summaries; exploratory only — not nutrition or sleep advice.
+**UI:** Prediction cards + full table. Exploratory only — not nutrition or sleep advice.
 
 ---
 
@@ -81,7 +85,7 @@ research associations) from the curated panel.
 
 **Never:** Recommend starting/stopping medication from GenoLens alone.
 
-**UI:** Same plain-language hit table as Traits / Wellness.
+**UI:** Prediction cards + full table; disclaimer under “About this result.”
 
 ---
 
@@ -92,6 +96,8 @@ wording (“not a diagnosis”, “seek clinical testing”).
 
 **Categories:** `health`, `carrier` only (traits/pharma/wellness are separate hubs).
 
+**UI:** Prediction cards + full table.
+
 ---
 
 ## G — DNA Relatives
@@ -100,9 +106,11 @@ See the dedicated guide: [Relatives and pedigree](relatives-and-pedigree.md).
 
 Summary:
 
-- Choose **primary** (settings) and **candidates** (relatives page).
-- Compare selected pairs only.
-- Directed pedigree uses IBD2 + optional birth years.
+- Choose **primary** (settings) and **candidates** (chips on relatives page).
+- Compare selected pairs; when 3–8 people are selected, **candidate × candidate**
+  pairs (e.g. mother × grandmother) are included via family-tree triangulation.
+- UI groups **With you** vs **Among selected relatives**.
+- Directed pedigree uses IBD2 + optional birth years; edge table under Details.
 - Ambiguous edges stay undirected for user labeling.
 
 ---
@@ -111,6 +119,9 @@ Summary:
 
 **Intent:** Closest ancient individuals/groups and a simple PCA neighborhood using
 a reduced AADR-derived panel (or a small **demo panel** if AADR is not prepared).
+
+**UI:** **PCA scatter** (reference points + “You” star) from the API `pca` payload,
+then closest-individual / closest-group tables.
 
 **Not claimed:** Descent from named royals or specific remains — see named-remains
 highlights as affinity callouts only.
@@ -143,9 +154,11 @@ SNP list (`archaic_panel.json`).
 
 ## Shared UI patterns
 
-- `Disclaimer` component on every hub.
+- Hub `/reports` uses **illustrated SVG tiles** (not tiny glyphs); sidebar shows
+  the same art as thumbnails (`web/components/illustrations/`).
+- `Disclaimer` / “About this result” collapse so predictions stay readable first.
 - Primary sample from `SampleProvider` (top bar / settings).
-- Cards used for scanning interactions; hero stays brand-forward on `/`.
+- Hero stays brand-forward on `/`.
 
 ## Related docs
 

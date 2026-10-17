@@ -103,6 +103,28 @@ select {
   margin-bottom: 0.2rem;
 }
 
+.nav a.nav-illust {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.55rem;
+}
+
+.nav-thumb {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.nav-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .nav a:hover,
 .nav a.active {
   background: var(--surface);
@@ -188,6 +210,55 @@ select {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1rem;
+}
+
+.hub-grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.15rem;
+}
+
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.hub-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px rgba(28, 36, 33, 0.12);
+}
+
+.hub-card-art {
+  height: 110px;
+  overflow: hidden;
+  background: #ebe6de;
+}
+
+.hub-card-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hub-card-body {
+  padding: 1rem 1.15rem 1.2rem;
+}
+
+.hub-card-body h3 {
+  font-family: var(--font-display);
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+}
+
+.hub-card-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .card {
@@ -409,6 +480,283 @@ button.linkish {
   color: var(--muted);
 }
 
+.prediction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.prediction-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.prediction-art {
+  height: 88px;
+  background: #ebe6de;
+}
+
+.prediction-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.prediction-body {
+  padding: 0.95rem 1.1rem 1.1rem;
+}
+
+.prediction-topic {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.prediction-headline {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  margin: 0.25rem 0 0.35rem;
+  line-height: 1.2;
+}
+
+.prediction-meta {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.prediction-extra {
+  margin: 0.6rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.prediction-how {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.prediction-how summary,
+.about-collapse summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.about-collapse {
+  margin: 0.75rem 0 1rem;
+}
+
+.ancestry-viz {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1rem 0 1.5rem;
+}
+
+.pie-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pie-svg {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+
+.pie-legend,
+.pca-legend,
+.catalog-list,
+.catalog-inline,
+.phenotype-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pie-legend li,
+.pca-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.pie-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+.catalog-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.catalog-inline a,
+.catalog-list a {
+  color: var(--teal-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pca-wrap {
+  margin: 0.75rem 0 1.5rem;
+}
+
+.pca-svg {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.pca-caption {
+  margin: 0.4rem 0;
+}
+
+.pca-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.phenotype-wrap {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+  margin: 1.25rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #eef7f4, #fff5f0);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.phenotype-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.phenotype-legend {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+
+.relatives-sticky {
+  position: sticky;
+  top: 70px;
+  z-index: 5;
+  background: rgba(247, 244, 239, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.candidate-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chip-on {
+  background: #eef7f4;
+  border-color: var(--teal);
+  color: var(--teal-deep);
+  box-shadow: inset 0 0 0 1px var(--teal);
+}
+
+.chip-badge {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: #ebe6de;
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+}
+
+.relatives-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.relationship-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.85rem;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.relationship-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.relationship-who {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.relationship-label {
+  color: var(--teal-deep);
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+
+.person-lg {
+  min-width: 160px;
+  padding: 1rem 1.2rem;
+}
+
+.pedigree-hero {
+  padding: 1.5rem;
+}
+
+.empty-relatives {
+  max-width: 360px;
+  margin: 1.5rem auto;
+}
+
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
@@ -419,5 +767,9 @@ button.linkish {
   }
   .summary {
     grid-template-columns: 1fr 1fr;
+  }
+  .ancestry-viz,
+  .phenotype-wrap {
+    grid-template-columns: 1fr;
   }
 }

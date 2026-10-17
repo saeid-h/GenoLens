@@ -91,14 +91,64 @@ export function putMeta(id: string, body: Record<string, unknown>) {
 }
 
 export const REPORTS = [
-  { slug: "ancestry", title: "Ancestry Composition", blurb: "Continental affinity percentages" },
-  { slug: "haplogroups", title: "Haplogroups", blurb: "Maternal and paternal lineage hints" },
-  { slug: "traits", title: "Traits", blurb: "Taste, pigmentation, and similar markers" },
-  { slug: "wellness", title: "Wellness", blurb: "Metabolism-oriented exploratory markers" },
-  { slug: "pharmacogenetics", title: "Pharmacogenetics", blurb: "Drug-gene markers with caveats" },
-  { slug: "health", title: "Health & carrier", blurb: "Exploratory cards — not diagnoses" },
-  { slug: "relatives", title: "DNA Relatives", blurb: "Primary vs selected candidates + tree" },
-  { slug: "ancient", title: "Ancient affinity", blurb: "Closest ancient groups and individuals" },
-  { slug: "archaic", title: "Archaic affinity", blurb: "Neanderthal-informative SNP hits" },
-  { slug: "prs", title: "Polygenic scores", blurb: "Open-catalog / demo PRS scores" },
+  {
+    slug: "ancestry",
+    title: "Ancestry Composition",
+    blurb: "Continental affinity percentages",
+    illustration: "ancestry",
+  },
+  {
+    slug: "haplogroups",
+    title: "Haplogroups",
+    blurb: "Maternal and paternal lineage hints",
+    illustration: "haplogroups",
+  },
+  {
+    slug: "traits",
+    title: "Traits",
+    blurb: "Taste, pigmentation, and similar markers",
+    illustration: "traits",
+  },
+  {
+    slug: "wellness",
+    title: "Wellness",
+    blurb: "Metabolism-oriented exploratory markers",
+    illustration: "wellness",
+  },
+  {
+    slug: "pharmacogenetics",
+    title: "Pharmacogenetics",
+    blurb: "Drug-gene markers with caveats",
+    illustration: "pharmacogenetics",
+  },
+  {
+    slug: "health",
+    title: "Health & carrier",
+    blurb: "Exploratory cards — not diagnoses",
+    illustration: "health",
+  },
+  {
+    slug: "relatives",
+    title: "DNA Relatives",
+    blurb: "Primary vs selected candidates + tree",
+    illustration: "relatives",
+  },
+  {
+    slug: "ancient",
+    title: "Ancient affinity",
+    blurb: "Closest ancient groups and individuals",
+    illustration: "ancient",
+  },
+  {
+    slug: "archaic",
+    title: "Archaic affinity",
+    blurb: "Neanderthal-informative SNP hits",
+    illustration: "archaic",
+  },
+  {
+    slug: "prs",
+    title: "Polygenic scores",
+    blurb: "Open-catalog / demo PRS scores",
+    illustration: "prs",
+  },
 ] as const;

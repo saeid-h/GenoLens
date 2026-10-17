@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
+import { HubIllustration } from "@/components/illustrations";
 import { getOverview, REPORTS } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
@@ -39,11 +40,16 @@ export default function ReportsHub() {
           </div>
         </div>
       )}
-      <div className="grid">
+      <div className="grid hub-grid">
         {REPORTS.map((r) => (
-          <Link key={r.slug} href={`/reports/${r.slug}`} className="card">
-            <h3>{r.title}</h3>
-            <p>{r.blurb}</p>
+          <Link key={r.slug} href={`/reports/${r.slug}`} className="hub-card">
+            <div className="hub-card-art">
+              <HubIllustration name={r.illustration} />
+            </div>
+            <div className="hub-card-body">
+              <h3>{r.title}</h3>
+              <p>{r.blurb}</p>
+            </div>
           </Link>
         ))}
       </div>

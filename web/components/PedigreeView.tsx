@@ -20,48 +20,21 @@ export function PedigreeView({
   notes,
   birthYears,
   asciiTree,
+  detailsCollapsed = false,
 }: {
   nodes: Node[];
   edges: Edge[];
   notes?: string[];
   birthYears?: Record<string, number | null>;
   asciiTree?: string;
+  detailsCollapsed?: boolean;
 }) {
   const gens = Array.from(new Set(nodes.map((n) => n.generation))).sort((a, b) => a - b);
   const pc = edges.filter((e) => e.kind === "parent_child");
   const sibs = edges.filter((e) => e.kind === "sibling");
 
-  return (
-    <div className="pedigree-wrap">
-      <div className="pedigree" aria-label="Family tree by generation">
-        {gens.map((g) => (
-          <div key={g} className="generation-block">
-            <div className="generation-label">Generation {g}</div>
-            <div className="generation">
-              {nodes
-                .filter((n) => n.generation === g)
-                .map((n) => {
-                  const year = n.birth_year ?? birthYears?.[n.label];
-                  return (
-                    <div className="person" key={n.label}>
-                      <div className="role">{n.role}</div>
-                      <div className="name">{n.label}</div>
-                      <div className="muted">
-                        {[n.sex, year != null ? `b. ${year}` : null].filter(Boolean).join(" · ") || "—"}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-            {g < (gens[gens.length - 1] ?? g) && pc.some((e) => true) ? (
-              <div className="pedigree-arrows" aria-hidden>
-                ↓ parent → child
-              </div>
-            ) : null}
-          </div>
-        ))}
-      </div>
-
+  const details = (
+    <>
       {pc.length > 0 && (
         <>
           <h3>Parent → child links</h3>
@@ -138,6 +111,49 @@ export function PedigreeView({
             <li key={n}>{n}</li>
           ))}
         </ul>
+      )}
+    </>
+  );
+
+  return (
+    <div className="pedigree-wrap">
+      <div className="pedigree pedigree-hero" aria-label="Family tree by generation">
+        {gens.map((g) => (
+          <div key={g} className="generation-block">
+            <div className="generation-label">Generation {g}</div>
+            <div className="generation">
+              {nodes
+                .filter((n) => n.generation === g)
+                .map((n) => {
+                  const year = n.birth_year ?? birthYears?.[n.label];
+                  return (
+                    <div className="person person-lg" key={n.label}>
+                      <div className="role">{n.role}</div>
+                      <div className="name">{n.label}</div>
+                      <div className="muted">
+                        {[n.sex, year != null ? `b. ${year}` : null].filter(Boolean).join(" · ") ||
+                          "—"}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+            {g < (gens[gens.length - 1] ?? g) && pc.length > 0 ? (
+              <div className="pedigree-arrows" aria-hidden>
+                ↓ parent → child
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
+
+      {detailsCollapsed ? (
+        <details className="about-collapse">
+          <summary>Details (edges & ASCII)</summary>
+          {details}
+        </details>
+      ) : (
+        details
       )}
     </div>
   );

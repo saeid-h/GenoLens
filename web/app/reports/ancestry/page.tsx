@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
 import { PercentBars } from "@/components/PercentBars";
+import { PieChart } from "@/components/PieChart";
 import { getAncestry } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
@@ -42,20 +44,42 @@ export default function AncestryPage() {
         often look closest to South Asian (GIH, ITU, PJL) and/or Southern European (TSI, IBS)
         references.
       </p>
+      <p>
+        <Link href="/catalog/ancestry">Browse the reference catalog →</Link>
+      </p>
       <Disclaimer text={String(data?.method_summary || data?.disclaimer || "")} />
       {error && <p className="muted">{error}</p>}
       {data && (
         <>
           <p>
             <strong>Closest region:</strong>{" "}
-            {String(data.superpopulation_label || data.superpopulation || "—")}{" "}
+            <Link href={`/catalog/ancestry/${String(data.superpopulation || "")}`}>
+              {String(data.superpopulation_label || data.superpopulation || "—")}
+            </Link>{" "}
             <span className="muted">
               ({String(data.method)}; {String(data.markers_used)}/
               {String(data.markers_total || "?")} markers)
             </span>
           </p>
           <h2>Regional affinity</h2>
-          <PercentBars items={regionItems} />
+          <div className="ancestry-viz">
+            <PieChart items={regionItems} />
+            <div>
+              <PercentBars
+                items={regionItems.map((i) => ({
+                  ...i,
+                  label: i.label,
+                }))}
+              />
+              <ul className="catalog-inline">
+                {regionItems.map((i) => (
+                  <li key={i.code}>
+                    <Link href={`/catalog/ancestry/${i.code}`}>{i.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
           {topPops.length > 0 && (
             <>
               <h2>Closest 1000 Genomes populations</h2>
@@ -75,9 +99,16 @@ export default function AncestryPage() {
                   {topPops.map((p) => (
                     <tr key={p.code}>
                       <td>
-                        {p.label} <span className="muted">({p.code})</span>
+                        <Link href={`/catalog/ancestry/${p.code}`}>{p.label}</Link>{" "}
+                        <span className="muted">({p.code})</span>
                       </td>
-                      <td>{p.region || "—"}</td>
+                      <td>
+                        {p.region ? (
+                          <Link href={`/catalog/ancestry/${p.region}`}>{p.region}</Link>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
                       <td>{p.percent.toFixed(1)}</td>
                     </tr>
                   ))}

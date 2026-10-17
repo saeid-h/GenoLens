@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { HubIllustration } from "@/components/illustrations";
 import { REPORTS } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
@@ -44,8 +45,15 @@ export function ReportShell({ children }: { children: React.ReactNode }) {
           {REPORTS.map((r) => {
             const href = `/reports/${r.slug}`;
             return (
-              <Link key={r.slug} href={href} className={pathname === href ? "active" : ""}>
-                {r.title}
+              <Link
+                key={r.slug}
+                href={href}
+                className={`nav-illust ${pathname === href ? "active" : ""}`}
+              >
+                <span className="nav-thumb" aria-hidden>
+                  <HubIllustration name={r.illustration} />
+                </span>
+                <span>{r.title}</span>
               </Link>
             );
           })}

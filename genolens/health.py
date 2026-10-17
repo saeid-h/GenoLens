@@ -23,6 +23,8 @@ class HealthHit:
     note: str
     source: str
     present: bool
+    topic: str | None = None
+    prediction: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -34,6 +36,8 @@ class HealthHit:
             "note": self.note,
             "source": self.source,
             "present": self.present,
+            "topic": self.topic,
+            "prediction": self.prediction,
         }
 
 
@@ -47,6 +51,18 @@ TRAIT_CATEGORIES = frozenset({"trait"})
 WELLNESS_CATEGORIES = frozenset({"metabolism", "wellness"})
 PHARMA_CATEGORIES = frozenset({"pharmacogenetics"})
 HEALTH_CATEGORIES = frozenset({"health", "carrier"})
+
+
+def _lookup_note(notes: dict[str, Any], geno: str) -> str | None:
+    key = "".join(sorted(geno)) if len(geno) == 2 and geno.isalpha() else geno
+    note = notes.get(geno) or notes.get(key)
+    if note:
+        return str(note)
+    if len(geno) == 2:
+        rev = notes.get(geno[::-1])
+        if rev:
+            return str(rev)
+    return None
 
 
 def match_health(
@@ -65,16 +81,15 @@ def match_health(
         rsid = marker["rsid"]
         geno = genotypes.get(rsid)
         notes = marker.get("notes", {})
+        predictions = marker.get("predictions") or {}
+        topic = marker.get("topic")
         if geno is None:
             note = "Not called on this chip / file."
+            prediction = None
             present = False
         else:
-            # Normalize order for diploid calls (AG == GA)
-            key = "".join(sorted(geno)) if len(geno) == 2 and geno.isalpha() else geno
-            note = notes.get(geno) or notes.get(key) or f"Genotype {geno} (no panel note for this call)."
-            # also try reverse diploid
-            if note.startswith("Genotype ") and len(geno) == 2:
-                note = notes.get(geno[::-1], note)
+            note = _lookup_note(notes, geno) or f"Genotype {geno} (no panel note for this call)."
+            prediction = _lookup_note(predictions, geno)
             present = True
 
         hits.append(
@@ -87,6 +102,8 @@ def match_health(
                 note=note,
                 source=marker.get("source", ""),
                 present=present,
+                topic=topic,
+                prediction=prediction,
             )
         )
     return hits

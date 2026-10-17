@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Disclaimer } from "@/components/Disclaimer";
+import { PcaScatter } from "@/components/PcaScatter";
 import { getAncient } from "@/lib/api";
 import { useSample } from "@/lib/sample";
 
@@ -15,14 +16,28 @@ export default function AncientPage() {
 
   const individuals = data?.ranked?.individuals || [];
   const groups = data?.ranked?.groups || [];
+  const pca = data?.pca || {};
 
   return (
     <div className="panel">
       <h1>Ancient affinity</h1>
       <Disclaimer />
       {data?.ranked?.is_demo && (
-        <p className="muted">Using synthetic demo panel — download AADR into data/reference/ for real matches.</p>
+        <p className="muted">
+          Using synthetic demo panel — download AADR into data/reference/ for real matches.
+        </p>
       )}
+      <h2>PCA projection</h2>
+      <p className="muted">
+        Your genome projected onto principal components fit from the ancient reference panel (star
+        = you).
+      </p>
+      <PcaScatter
+        user={pca.user}
+        points={pca.points || []}
+        explainedVariance={pca.explained_variance || []}
+        isDemo={Boolean(pca.is_demo)}
+      />
       <h2>Closest individuals</h2>
       <table className="data">
         <thead>
