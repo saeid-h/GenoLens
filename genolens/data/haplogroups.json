@@ -1,145 +1,116 @@
 {
-  "disclaimer": "Shallow marker-based haplogroup hints from consumer microarray SNPs. 23andMe v5 has limited Y coverage; many deep branches cannot be called.",
+  "disclaimer": "Shallow marker-based haplogroup hints from consumer microarray SNPs. 23andMe v5 often uses internal i-ids on MT; many deep branches cannot be called.",
   "y": [
-    {
-      "haplogroup": "BT",
-      "rsid": "rs2032658",
-      "derived": "A",
-      "parent": null
-    },
-    {
-      "haplogroup": "CT",
-      "rsid": "rs2032631",
-      "derived": "C",
-      "parent": "BT"
-    },
-    {
-      "haplogroup": "F",
-      "rsid": "rs2032624",
-      "derived": "T",
-      "parent": "CT"
-    },
-    {
-      "haplogroup": "G",
-      "rsid": "rs2032626",
-      "derived": "A",
-      "parent": "F"
-    },
-    {
-      "haplogroup": "IJ",
-      "rsid": "rs17315752",
-      "derived": "A",
-      "parent": "F"
-    },
-    {
-      "haplogroup": "J",
-      "rsid": "rs2032604",
-      "derived": "A",
-      "parent": "IJ"
-    },
-    {
-      "haplogroup": "J2",
-      "rsid": "rs2032636",
-      "derived": "C",
-      "parent": "J"
-    },
-    {
-      "haplogroup": "I",
-      "rsid": "rs2032597",
-      "derived": "A",
-      "parent": "IJ"
-    },
-    {
-      "haplogroup": "R",
-      "rsid": "rs17306572",
-      "derived": "A",
-      "parent": "F"
-    },
-    {
-      "haplogroup": "R1a",
-      "rsid": "rs17222573",
-      "derived": "T",
-      "parent": "R"
-    },
-    {
-      "haplogroup": "R1b",
-      "rsid": "rs9786153",
-      "derived": "C",
-      "parent": "R"
-    },
-    {
-      "haplogroup": "E",
-      "rsid": "rs2032620",
-      "derived": "A",
-      "parent": "CT"
-    },
-    {
-      "haplogroup": "E1b1b",
-      "rsid": "rs2032638",
-      "derived": "T",
-      "parent": "E"
-    }
+    {"haplogroup": "BT", "rsid": "rs2032658", "derived": "A", "parent": null},
+    {"haplogroup": "CT", "rsid": "rs2032631", "derived": "C", "parent": "BT"},
+    {"haplogroup": "F", "rsid": "rs2032624", "derived": "T", "parent": "CT"},
+    {"haplogroup": "G", "rsid": "rs2032626", "derived": "A", "parent": "F"},
+    {"haplogroup": "IJ", "rsid": "rs17315752", "derived": "A", "parent": "F"},
+    {"haplogroup": "J", "rsid": "rs2032604", "derived": "A", "parent": "IJ"},
+    {"haplogroup": "J2", "rsid": "rs2032636", "derived": "C", "parent": "J"},
+    {"haplogroup": "I", "rsid": "rs2032597", "derived": "A", "parent": "IJ"},
+    {"haplogroup": "R", "rsid": "rs17306572", "derived": "A", "parent": "F"},
+    {"haplogroup": "R1a", "rsid": "rs17222573", "derived": "T", "parent": "R"},
+    {"haplogroup": "R1b", "rsid": "rs9786153", "derived": "C", "parent": "R"},
+    {"haplogroup": "E", "rsid": "rs2032620", "derived": "A", "parent": "CT"},
+    {"haplogroup": "E1b1b", "rsid": "rs2032638", "derived": "T", "parent": "E"}
   ],
   "mt": [
     {
       "haplogroup": "L3",
-      "rsid": "rs2853508",
-      "derived": "A",
-      "parent": null
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 3594,
+      "derived": "C",
+      "parent": null,
+      "optional_root": true
     },
     {
       "haplogroup": "N",
-      "rsid": "rs2853493",
-      "derived": "A",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 9540,
+      "derived": "T",
+      "parent": "L3"
+    },
+    {
+      "haplogroup": "M",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 10400,
+      "derived": "T",
       "parent": "L3"
     },
     {
       "haplogroup": "R",
-      "rsid": "rs2853504",
-      "derived": "A",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 12705,
+      "derived": "C",
       "parent": "N"
     },
     {
+      "haplogroup": "HV",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 14766,
+      "derived": "C",
+      "parent": "R"
+    },
+    {
       "haplogroup": "H",
-      "rsid": "rs7504568",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 7028,
+      "derived": "C",
+      "parent": "HV"
+    },
+    {
+      "haplogroup": "U",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 12308,
       "derived": "G",
       "parent": "R"
     },
     {
-      "haplogroup": "U",
-      "rsid": "rs2853506",
+      "haplogroup": "K",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 9055,
+      "derived": "A",
+      "parent": "U"
+    },
+    {
+      "haplogroup": "JT",
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 4216,
       "derived": "C",
       "parent": "R"
     },
     {
       "haplogroup": "J",
-      "rsid": "rs2853498",
-      "derived": "C",
-      "parent": "R"
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 13708,
+      "derived": "A",
+      "parent": "JT"
     },
     {
       "haplogroup": "T",
-      "rsid": "rs2853499",
-      "derived": "C",
-      "parent": "R"
+      "rsid": null,
+      "chrom": "MT",
+      "pos": 15607,
+      "derived": "G",
+      "parent": "JT"
     },
     {
-      "haplogroup": "K",
-      "rsid": "rs2853507",
+      "haplogroup": "N_alt",
+      "rsid": "rs2853493",
       "derived": "A",
-      "parent": "U"
-    },
-    {
-      "haplogroup": "HV",
-      "rsid": "rs2853505",
-      "derived": "A",
-      "parent": "R"
-    },
-    {
-      "haplogroup": "M",
-      "rsid": "rs2853495",
-      "derived": "C",
-      "parent": "L3"
+      "parent": "L3",
+      "alias_of": "N"
     }
   ]
 }
