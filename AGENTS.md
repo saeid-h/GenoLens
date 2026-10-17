@@ -37,15 +37,15 @@ Single source of rules for every coding agent in this repository. Pointer files
 
 | Path | Purpose | Git |
 |------|---------|-----|
-| **`docs/`** | Shared product documentation for humans and teammates (architecture, API, runbooks). | **Tracked** — commit updates here. |
-| **`my-docs/`** | Personal, machine-local agent knowledge base (sessions, decisions, private notes). | **Gitignored** — never stage, commit, copy into `docs/` or any tracked path, or upload. |
+| **`docs/`** | **Public project documentation** for users of GenoLens (architecture, API, runbooks). | **Tracked** — commit and ship with the repo. |
+| **`my-docs/`** | **Local and private** to the owner — personal agent knowledge base (sessions, decisions, private notes). | **Gitignored** — never stage, commit, copy into `docs/` or any tracked path, or upload. |
 
-- Product docs belong only in `docs/` (and short pointers in `README.md`).
+- Anything meant for public / repo readers belongs only in `docs/` (and short pointers in `README.md`).
 - Personal memory / update-my-docs output belongs only in `my-docs/`.
 - Never move, mirror, or “promote” `my-docs/` content into `docs/` unless the owner
   explicitly asks to publish a specific non-private excerpt.
 - When `my-docs/` exists, read `my-docs/machine-friendly/index.json` first for
-  local context. Nothing a teammate needs may live only in `my-docs/`.
+  local context. Nothing public users need may live only in `my-docs/`.
 
 ## Product rules
 
