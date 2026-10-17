@@ -24,8 +24,9 @@ Single source of rules for every coding agent in this repository. Pointer files
   approval to edit.
 - Never push, force-push, merge into `main` on the remote, or change remotes
   unless the owner asks.
-- Ask rather than guess names, paths, scope, or interfaces. When the owner
-  delegates a choice, say that it was delegated.
+- Ask if it is not clear; do not assume. Prefer a short clarifying question over
+  guessing names, paths, scope, intent, or interfaces. When the owner delegates
+  a choice, say that it was delegated.
 
 ## Commits
 
