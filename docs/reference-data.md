@@ -63,16 +63,17 @@ open weights instead of synthetic demos.
 10k–1M+ variants). Giant panels barely overlap a 23andMe chip and would make
 scoring/UI unusable.
 
-**Default download (best judgment):** a **diverse** subset — about **80** scores,
-preferring different traits, each with **≤100 variants**, converted to local JSON:
+**Default download (best judgment):** a **curated** chip-friendly subset
+(cancers, lipids, diabetes, BMI, Alzheimer, asthma, etc., each **≤150 variants**)
+— not all ~7k catalog entries:
 
 ```bash
 .venv/bin/python scripts/download_pgs_catalog.py
-# optional: --max-variants 200 --limit 150
+# optional: --max-variants 100
 ```
 
 Writes gitignored `data/reference/prs/catalog.json`. Restart the API afterward;
-`/reports/prs` should leave demo mode (filter/sort by chip coverage).
+`/reports/prs` leaves demo mode (filter/sort by chip coverage).
 
 Expected conceptual shape (simplified):
 
