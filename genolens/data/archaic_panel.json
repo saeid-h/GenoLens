@@ -1,0 +1,15 @@
+{
+  "disclaimer": "Exploratory archaic-informative SNPs. Counts are not a Neanderthal percentage product claim.",
+  "markers": [
+    {"rsid": "rs1864325", "archaic_allele": "T", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs3807031", "archaic_allele": "C", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs12592763", "archaic_allele": "G", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs7542905", "archaic_allele": "A", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs7531523", "archaic_allele": "G", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs12084406", "archaic_allele": "A", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs11184867", "archaic_allele": "T", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs1175550", "archaic_allele": "G", "note": "Published archaic-informative site (illustrative)"},
+    {"rsid": "rs3827760", "archaic_allele": "A", "note": "EDAR-adjacent / East Asian frequency (illustrative)"},
+    {"rsid": "rs17822931", "archaic_allele": "T", "note": "ABCC11 — not archaic; trait control marker"}
+  ]
+}

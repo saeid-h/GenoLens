@@ -1,0 +1,29 @@
+{
+  "disclaimer": "Demo polygenic score weights for engineering only. Replace with PGS Catalog scoring files for real exploratory scores. Not a clinical risk prediction.",
+  "scores": [
+    {
+      "id": "DEMO_HEIGHT",
+      "trait": "Height (demo)",
+      "citation": "Synthetic demo weights — not from PGS Catalog",
+      "variants": [
+        {"rsid": "rs1042725", "effect_allele": "T", "weight": 0.02},
+        {"rsid": "rs143384", "effect_allele": "G", "weight": 0.015},
+        {"rsid": "rs724016", "effect_allele": "A", "weight": 0.01},
+        {"rsid": "rs6060369", "effect_allele": "C", "weight": 0.012},
+        {"rsid": "rs1812175", "effect_allele": "G", "weight": 0.008}
+      ]
+    },
+    {
+      "id": "DEMO_BMI",
+      "trait": "BMI (demo)",
+      "citation": "Synthetic demo weights — not from PGS Catalog",
+      "variants": [
+        {"rsid": "rs9939609", "effect_allele": "A", "weight": 0.08},
+        {"rsid": "rs1558902", "effect_allele": "A", "weight": 0.06},
+        {"rsid": "rs1421085", "effect_allele": "C", "weight": 0.05},
+        {"rsid": "rs17817449", "effect_allele": "G", "weight": 0.04},
+        {"rsid": "rs1121980", "effect_allele": "A", "weight": 0.03}
+      ]
+    }
+  ]
+}
