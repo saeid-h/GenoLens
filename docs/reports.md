@@ -36,16 +36,19 @@ file, percentages are still exploratory — read markers-used notes in the paylo
 ## B — Haplogroups
 
 **Intent:** Shallow paternal (Y) and maternal (mt) haplogroup **hints** from a
-bundled defining-SNP tree.
+bundled defining-SNP tree (ISOGG-linked public rsIDs).
 
 **Important fix:** If a parent marker is missing on the chip, the walker
 **soft-passes** and still tests children. Position-based MT markers (chrom+pos)
-are used when rsIDs are absent on v5-class chips.
+are used when rsIDs are absent on v5-class chips. Y defining SNPs must use the
+correct rsID/allele (e.g. CT = M168/`rs2032595`, not M45).
 
-**UI:** Tip haplogroup, path (e.g. `N → R → U`), markers called/tested, note.
+**UI:** Tip haplogroup, path (e.g. `BT → CT → CF → P`), markers called/tested,
+evidence table, note comparing to 23andMe depth.
 
-**Limits:** Microarrays rarely resolve fine subclades. “Unresolved” should only
-appear when no derived alleles match — not merely because the root SNP is absent.
+**Limits:** 23andMe scores thousands of Y SNPs including private i-ids, so their
+paternal tip is usually much finer than GenoLens. GenoLens is an open shallow
+tree — expect broader branches (CT/CF/P), not terminal 23andMe labels.
 
 ---
 

@@ -21,6 +21,7 @@ class HaplogroupCall:
     markers_tested: int
     markers_called: int
     note: str
+    evidence: list[dict[str, Any]] | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -30,6 +31,7 @@ class HaplogroupCall:
             "markers_tested": self.markers_tested,
             "markers_called": self.markers_called,
             "note": self.note,
+            "evidence": list(self.evidence or []),
         }
 
 
@@ -95,6 +97,92 @@ def _display_name(marker: dict[str, Any]) -> str:
     return marker.get("alias_of") or marker["haplogroup"]
 
 
+def _children_of(markers: list[dict[str, Any]], parent_name: str) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for marker in markers:
+        if marker.get("parent") == parent_name:
+            out.append(marker)
+        display = _display_name(marker)
+        # also allow parent field matching alias display names of other nodes
+        if marker.get("parent") and marker.get("parent") != parent_name:
+            continue
+    # Include children whose parent equals this node's raw or display name
+    for marker in markers:
+        if marker.get("parent") in {parent_name, parent_name}:
+            if marker not in out:
+                out.append(marker)
+    # Deduplicate by haplogroup key
+    seen: set[str] = set()
+    uniq: list[dict[str, Any]] = []
+    for marker in markers:
+        if marker.get("parent") != parent_name:
+            continue
+        key = marker["haplogroup"]
+        if key in seen:
+            continue
+        seen.add(key)
+        uniq.append(marker)
+    return uniq
+
+
+def _best_path(
+    marker: dict[str, Any],
+    markers: list[dict[str, Any]],
+    genotypes: dict[str, str],
+    pos_index: dict[tuple[str, int], str],
+    evidence: list[dict[str, Any]],
+) -> tuple[list[str], int]:
+    """Return (path_labels, derived_hit_count) for the best subtree under marker."""
+    geno = _marker_genotype(marker, genotypes, pos_index)
+    derived_hit = _allele_matches(geno, marker["derived"])
+    missing = geno is None
+    soft = bool(marker.get("soft_pass") or marker.get("optional_root")) and (
+        missing or not derived_hit
+    )
+    label = _display_name(marker)
+    snp_name = marker.get("snp_name") or marker.get("rsid") or marker.get("pos")
+    evidence.append(
+        {
+            "haplogroup": label,
+            "snp": snp_name,
+            "rsid": marker.get("rsid"),
+            "genotype": geno,
+            "derived": marker["derived"],
+            "match": derived_hit,
+            "missing": missing,
+            "soft_pass": soft and not derived_hit,
+        }
+    )
+
+    children = _children_of(markers, marker["haplogroup"])
+    # Also children of alias target when this node is an alias source
+    if marker.get("alias_of"):
+        children = children + [
+            m for m in _children_of(markers, marker["alias_of"]) if m not in children
+        ]
+
+    child_results: list[tuple[list[str], int]] = []
+    for child in children:
+        child_results.append(_best_path(child, markers, genotypes, pos_index, evidence))
+
+    best_child_path: list[str] = []
+    best_child_hits = 0
+    if child_results:
+        best_child_path, best_child_hits = max(child_results, key=lambda item: (item[1], len(item[0])))
+
+    if derived_hit:
+        path = [label] if not best_child_path or best_child_path[0] != label else []
+        if not path:
+            path = [label]
+        return path + best_child_path, 1 + best_child_hits
+
+    if soft:
+        # Do not add this node to the path; only keep downstream derived evidence.
+        return best_child_path, best_child_hits
+
+    return [], 0
+
+
 def _call_branch(
     markers: list[dict[str, Any]],
     genotypes: dict[str, str],
@@ -107,49 +195,23 @@ def _call_branch(
         if _marker_genotype(marker, genotypes, pos_index) is not None:
             called += 1
 
-    # Soft-pass missing optional roots: start from roots, but if a parent SNP is
-    # absent on the chip, still evaluate children.
-    path: list[str] = []
-    frontier = [m for m in markers if m.get("parent") is None]
-    visited: set[str] = set()
+    roots = [m for m in markers if m.get("parent") is None]
+    evidence: list[dict[str, Any]] = []
+    best_path: list[str] = []
+    best_hits = 0
+    for root in roots:
+        path, hits = _best_path(root, markers, genotypes, pos_index, evidence)
+        if hits > best_hits or (hits == best_hits and len(path) > len(best_path)):
+            best_path, best_hits = path, hits
 
-    while frontier:
-        next_frontier: list[dict[str, Any]] = []
-        progressed = False
-        for marker in frontier:
-            name = marker["haplogroup"]
-            if name in visited:
-                continue
-            visited.add(name)
-            geno = _marker_genotype(marker, genotypes, pos_index)
-            derived_hit = _allele_matches(geno, marker["derived"])
-            missing = geno is None
-            optional = bool(marker.get("optional_root")) or missing
+    # Deduplicate evidence by haplogroup+rsid keeping last
+    uniq_ev: dict[str, dict[str, Any]] = {}
+    for row in evidence:
+        key = f"{row.get('haplogroup')}:{row.get('rsid')}"
+        uniq_ev[key] = row
+    evidence_out = list(uniq_ev.values())
 
-            children = [m for m in markers if m.get("parent") == name]
-            # Also accept children whose parent field is the alias target
-            display = _display_name(marker)
-            children += [
-                m
-                for m in markers
-                if m.get("parent") == display and m not in children
-            ]
-
-            if derived_hit:
-                label = display
-                if not path or path[-1] != label:
-                    path.append(label)
-                progressed = True
-                next_frontier.extend(children)
-            elif optional and children:
-                # Missing parent SNP: still explore children
-                progressed = True
-                next_frontier.extend(children)
-        if not progressed:
-            break
-        frontier = next_frontier
-
-    tip = path[-1] if path else None
+    tip = best_path[-1] if best_path else None
     if called == 0:
         note = "No haplogroup markers from this tree were called on this chip."
     elif tip is None:
@@ -160,16 +222,18 @@ def _call_branch(
     else:
         note = (
             f"Deepest matched branch: {tip}. "
-            "Consumer chips often cannot resolve finer subclades."
+            "GenoLens uses a small open SNP tree; 23andMe uses thousands of Y markers "
+            "(including private i-ids), so their paternal haplogroup is usually much finer."
         )
 
     return HaplogroupCall(
         lineage="Y",
         haplogroup=tip,
-        path=path,
+        path=best_path,
         markers_tested=tested,
         markers_called=called,
         note=note,
+        evidence=evidence_out,
     )
 
 

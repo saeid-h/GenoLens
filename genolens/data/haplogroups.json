@@ -1,19 +1,147 @@
 {
-  "disclaimer": "Shallow marker-based haplogroup hints from consumer microarray SNPs. 23andMe v5 often uses internal i-ids on MT; many deep branches cannot be called.",
+  "disclaimer": "Shallow marker-based haplogroup hints from open ISOGG-linked microarray SNPs. 23andMe uses a much larger proprietary Y tree (thousands of SNPs including internal i-ids), so GenoLens tips are often more basal. Not a replacement for 23andMe or Big-Y.",
   "y": [
-    {"haplogroup": "BT", "rsid": "rs2032658", "derived": "A", "parent": null},
-    {"haplogroup": "CT", "rsid": "rs2032631", "derived": "C", "parent": "BT"},
-    {"haplogroup": "F", "rsid": "rs2032624", "derived": "T", "parent": "CT"},
-    {"haplogroup": "G", "rsid": "rs2032626", "derived": "A", "parent": "F"},
-    {"haplogroup": "IJ", "rsid": "rs17315752", "derived": "A", "parent": "F"},
-    {"haplogroup": "J", "rsid": "rs2032604", "derived": "A", "parent": "IJ"},
-    {"haplogroup": "J2", "rsid": "rs2032636", "derived": "C", "parent": "J"},
-    {"haplogroup": "I", "rsid": "rs2032597", "derived": "A", "parent": "IJ"},
-    {"haplogroup": "R", "rsid": "rs17306572", "derived": "A", "parent": "F"},
-    {"haplogroup": "R1a", "rsid": "rs17222573", "derived": "T", "parent": "R"},
-    {"haplogroup": "R1b", "rsid": "rs9786153", "derived": "C", "parent": "R"},
-    {"haplogroup": "E", "rsid": "rs2032620", "derived": "A", "parent": "CT"},
-    {"haplogroup": "E1b1b", "rsid": "rs2032638", "derived": "T", "parent": "E"}
+    {
+      "haplogroup": "BT",
+      "rsid": "rs2032658",
+      "derived": "A",
+      "parent": null,
+      "snp_name": "M91"
+    },
+    {
+      "haplogroup": "CT",
+      "rsid": "rs2032595",
+      "derived": "T",
+      "parent": "BT",
+      "snp_name": "M168"
+    },
+    {
+      "haplogroup": "DE",
+      "rsid": "rs2032652",
+      "derived": "C",
+      "parent": "CT",
+      "snp_name": "M145"
+    },
+    {
+      "haplogroup": "E",
+      "rsid": "rs2032620",
+      "derived": "C",
+      "parent": "DE",
+      "snp_name": "M96"
+    },
+    {
+      "haplogroup": "E1b1b",
+      "rsid": "rs2032638",
+      "derived": "T",
+      "parent": "E",
+      "snp_name": "M35",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "CF",
+      "rsid": "rs2032598",
+      "derived": "T",
+      "parent": "CT",
+      "snp_name": "P143"
+    },
+    {
+      "haplogroup": "F",
+      "rsid": "rs2032624",
+      "derived": "T",
+      "parent": "CF",
+      "snp_name": "M89",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "G",
+      "rsid": "rs2032626",
+      "derived": "G",
+      "parent": "F",
+      "snp_name": "M201"
+    },
+    {
+      "haplogroup": "IJ",
+      "rsid": "rs17315752",
+      "derived": "A",
+      "parent": "F",
+      "snp_name": "P123",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "I",
+      "rsid": "rs2032597",
+      "derived": "C",
+      "parent": "IJ",
+      "snp_name": "M170"
+    },
+    {
+      "haplogroup": "J",
+      "rsid": "rs2032604",
+      "derived": "A",
+      "parent": "IJ",
+      "snp_name": "M304"
+    },
+    {
+      "haplogroup": "K",
+      "rsid": null,
+      "derived": "C",
+      "parent": "F",
+      "snp_name": "M9",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "P",
+      "rsid": "rs2032631",
+      "derived": "G",
+      "parent": "K",
+      "snp_name": "M45"
+    },
+    {
+      "haplogroup": "P_alt",
+      "rsid": "rs2032631",
+      "derived": "G",
+      "parent": "F",
+      "snp_name": "M45",
+      "alias_of": "P"
+    },
+    {
+      "haplogroup": "R",
+      "rsid": null,
+      "derived": "A",
+      "parent": "P",
+      "snp_name": "M207",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "R1",
+      "rsid": "rs2032623",
+      "derived": "C",
+      "parent": "R",
+      "snp_name": "M173",
+      "soft_pass": true
+    },
+    {
+      "haplogroup": "R1a",
+      "rsid": "rs2020857",
+      "derived": "T",
+      "parent": "R1",
+      "snp_name": "M198"
+    },
+    {
+      "haplogroup": "R1b",
+      "rsid": "rs9786153",
+      "derived": "C",
+      "parent": "R1",
+      "snp_name": "M343"
+    },
+    {
+      "haplogroup": "Q",
+      "rsid": null,
+      "derived": "T",
+      "parent": "P",
+      "snp_name": "M242",
+      "soft_pass": true
+    }
   ],
   "mt": [
     {
