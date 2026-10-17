@@ -5,6 +5,8 @@ Local, private DNA reports inspired by consumer genetics sites—**GenoLens bran
 **Primary UI:** Next.js report app (`web/`) + FastAPI (`api/`).  
 **Legacy UI:** Streamlit (`streamlit run genolens/app.py`).
 
+**Documentation:** see the full set under [`docs/`](docs/README.md) (architecture, API, report hubs A–J, relatives/pedigree, reference data, development, troubleshooting).
+
 ## Limits
 
 - Exploratory only — not medical advice or clinical diagnosis.
@@ -81,3 +83,4 @@ GitHub: https://github.com/saeid-h/GenoLens.git — push only when asked; never 
 - `genolens` — ingest (`snps`), relatedness (`lineage`), AIM ancestry, panels, ancient, archaic, PRS
 - `api` — FastAPI
 - `web` — Next.js App Router (Fraunces + Source Sans 3, teal/coral brand)
+- `docs/` — architecture, API, reports, ops (index: [docs/README.md](docs/README.md))

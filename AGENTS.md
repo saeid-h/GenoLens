@@ -12,7 +12,7 @@ Single source of rules for every coding agent in this repository. Pointer files
   is a legacy entry point.
 - Private genomes: `data/*.txt`. Reference downloads: `data/reference/`. Both are
   gitignored. Never stage, commit, or push them.
-- Start with `README.md` for how to run the stack.
+- Start with `README.md` for how to run the stack; deeper guides live in `docs/`.
 
 ## Working agreement
 
