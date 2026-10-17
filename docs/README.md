@@ -7,6 +7,10 @@ served by a localhost FastAPI layer (`api/`) and a Next.js report UI (`web/`).
 Reports are **exploratory** — not medical advice, clinical diagnosis, or proof
 of descent from any named historical person.
 
+> **`docs/` is not `my-docs/`.** This folder is the shared, git-tracked product
+> documentation. `my-docs/` (gitignored) is a personal agent knowledge base —
+> never mix the two or copy private notes here.
+
 ## Start here
 
 | Doc | Contents |

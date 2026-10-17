@@ -20,6 +20,8 @@ GenoLens/
 Read [`AGENTS.md`](../AGENTS.md) first. Highlights:
 
 - Never commit genomes, `data/reference/`, or `my-docs/`.
+- **`docs/` ≠ `my-docs/`:** shared product docs go in `docs/` (tracked);
+  personal agent memory stays in `my-docs/` (ignored). Do not mix or mirror them.
 - Never push unless the owner explicitly asks.
 - Reports remain exploratory / non-clinical.
 - Relatives must stay selection-driven; pedigree needs IBD2 and/or ages.

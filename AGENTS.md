@@ -29,13 +29,23 @@ Single source of rules for every coding agent in this repository. Pointer files
 
 ## Repository boundaries
 
-- Tracked code: `genolens/`, `api/`, `web/`, `tests/`, docs, and config.
+- Tracked code: `genolens/`, `api/`, `web/`, `tests/`, `docs/`, and config.
 - Never store credentials, tokens, or absolute machine-only secrets in tracked
   files. Local overrides belong in ignored config (for example `.env`).
-- `my-docs/` is a personal, ignored knowledge base. Never stage, commit, copy
-  into a tracked path, or upload it. When it exists, read
-  `my-docs/machine-friendly/index.json` first. Nothing a teammate needs may live
-  only in `my-docs/`.
+
+### `docs/` vs `my-docs/` — do not mix
+
+| Path | Purpose | Git |
+|------|---------|-----|
+| **`docs/`** | Shared product documentation for humans and teammates (architecture, API, runbooks). | **Tracked** — commit updates here. |
+| **`my-docs/`** | Personal, machine-local agent knowledge base (sessions, decisions, private notes). | **Gitignored** — never stage, commit, copy into `docs/` or any tracked path, or upload. |
+
+- Product docs belong only in `docs/` (and short pointers in `README.md`).
+- Personal memory / update-my-docs output belongs only in `my-docs/`.
+- Never move, mirror, or “promote” `my-docs/` content into `docs/` unless the owner
+  explicitly asks to publish a specific non-private excerpt.
+- When `my-docs/` exists, read `my-docs/machine-friendly/index.json` first for
+  local context. Nothing a teammate needs may live only in `my-docs/`.
 
 ## Product rules
 
