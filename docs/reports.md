@@ -51,19 +51,20 @@ appear when no derived alleles match — not merely because the root SNP is abse
 
 ## C — Traits
 
-**Intent:** Non-clinical trait markers (taste, pigmentation, etc.) from the
-curated panel.
+**Intent:** Non-clinical trait markers (taste, pigmentation, earwax, muscle,
+research associations) from the curated panel.
 
-**UI:** Card/table of rsID, gene, genotype, literature-style note.
+**UI:** Table columns **What this is** (plain summary) → gene → **Your DNA** →
+**What your result means** (genotype-specific plain language).
 
 ---
 
 ## D — Wellness
 
-**Intent:** Metabolism / sleep-adjacent / lifestyle-oriented markers
+**Intent:** Metabolism / alcohol / folate / sleep-adjacent markers
 (`metabolism`, `wellness` categories).
 
-**Copy:** Exploratory only — not nutrition or sleep medical advice.
+**Copy:** Plain-language summaries; exploratory only — not nutrition or sleep advice.
 
 ---
 
@@ -72,6 +73,8 @@ curated panel.
 **Intent:** CYP / TPMT / SLCO1B1-style drug-gene markers with **strong caveats**.
 
 **Never:** Recommend starting/stopping medication from GenoLens alone.
+
+**UI:** Same plain-language hit table as Traits / Wellness.
 
 ---
 

@@ -16,10 +16,15 @@ export default function TraitsPage() {
   return (
     <div className="panel">
       <h1>Traits</h1>
+      <p>
+        Everyday DNA markers — taste, eye/skin tendencies, earwax, muscle-related
+        SNPs, and some research associations. These are interesting genotype facts,
+        not medical results.
+      </p>
       <Disclaimer text={data?.disclaimer} />
       {data && (
         <p className="muted">
-          Called {data.markers_called}/{data.markers_total}
+          Called {data.markers_called}/{data.markers_total} on this file
         </p>
       )}
       {data && <HitsTable hits={data.hits || []} />}

@@ -13,22 +13,22 @@ export function HitsTable({ hits }: { hits: Hit[] }) {
     <table className="data">
       <thead>
         <tr>
-          <th>rsID</th>
+          <th>What this is</th>
           <th>Gene</th>
-          <th>Genotype</th>
-          <th>Note</th>
+          <th>Your DNA</th>
+          <th>What your result means</th>
         </tr>
       </thead>
       <tbody>
         {hits.map((h) => (
           <tr key={h.rsid} style={{ opacity: h.present === false ? 0.55 : 1 }}>
-            <td>{h.rsid}</td>
-            <td>{h.gene || ""}</td>
-            <td>{h.genotype || "—"}</td>
             <td>
-              <div>{h.note}</div>
-              {h.summary ? <div className="muted">{h.summary}</div> : null}
+              <div>{h.summary || h.rsid}</div>
+              <div className="muted">{h.rsid}</div>
             </td>
+            <td>{h.gene || "—"}</td>
+            <td>{h.genotype || "Not called on this file"}</td>
+            <td>{h.note || "—"}</td>
           </tr>
         ))}
       </tbody>

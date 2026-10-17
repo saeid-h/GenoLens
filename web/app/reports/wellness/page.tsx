@@ -16,7 +16,18 @@ export default function WellnessPage() {
   return (
     <div className="panel">
       <h1>Wellness</h1>
+      <p>
+        Metabolism-oriented markers — folate processing, stress-chemical breakdown
+        (COMT), alcohol flush enzymes, antioxidant/detox research SNPs, and a
+        sleep-adjacent body-clock variant. Exploratory lifestyle chemistry, not diet
+        or sleep prescriptions.
+      </p>
       <Disclaimer text={data?.disclaimer} />
+      {data && (
+        <p className="muted">
+          Called {data.markers_called}/{data.markers_total} on this file
+        </p>
+      )}
       {data && <HitsTable hits={data.hits || []} />}
     </div>
   );

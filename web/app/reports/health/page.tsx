@@ -16,7 +16,18 @@ export default function HealthPage() {
   return (
     <div className="panel">
       <h1>Health & carrier-style markers</h1>
+      <p>
+        Condition-linked markers discussed as carrier or risk associations in the
+        literature (e.g. hemochromatosis HFE, CFTR-style, sickle HBB). These are
+        never a diagnosis or a clinical carrier report — confirm anything
+        important with a medical lab.
+      </p>
       <Disclaimer text="Never a diagnosis. Exploratory literature-linked markers only." />
+      {data && (
+        <p className="muted">
+          Called {data.markers_called}/{data.markers_total} on this file
+        </p>
+      )}
       {data && <HitsTable hits={data.hits || []} />}
     </div>
   );

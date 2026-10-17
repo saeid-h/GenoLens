@@ -1,44 +1,44 @@
 {
-  "disclaimer": "Exploratory trait and pharmacogenetic markers only. Not medical advice. Microarray data covers a tiny fraction of the genome.",
+  "disclaimer": "Exploratory only — not medical advice, not a diagnosis, and not prescribing guidance. Microarray data covers a tiny fraction of the genome.",
   "markers": [
     {
       "rsid": "rs1801133",
       "gene": "MTHFR",
       "category": "metabolism",
-      "summary": "Folate metabolism variant commonly discussed as C677T.",
+      "summary": "Folate metabolism (C677T) — how one folate-processing enzyme variant looks on your chip. Not a reason to start supplements by itself.",
       "notes": {
-        "GG": "Common genotype at this site.",
-        "AG": "One copy of the T (A-coding) allele.",
-        "AA": "Two copies of the T (A-coding) allele.",
-        "CC": "Common genotype at this site (plus-strand C).",
-        "CT": "One copy of the T allele.",
-        "TT": "Two copies of the T allele."
+        "GG": "Usual (non-T) genotype at this site.",
+        "AG": "One copy of the C677T-style allele — common; not a diagnosis.",
+        "AA": "Two copies of the C677T-style allele — discussed online a lot; still not medical advice.",
+        "CC": "Usual genotype at this site.",
+        "CT": "One copy of the T allele — common; not a diagnosis.",
+        "TT": "Two copies of the T allele — discussed online a lot; still not medical advice."
       },
-      "source": "literature / SNPedia summaries"
+      "source": "literature summaries"
     },
     {
       "rsid": "rs4680",
       "gene": "COMT",
       "category": "metabolism",
-      "summary": "Val158Met variant affecting catecholamine breakdown.",
+      "summary": "Stress/catecholamine breakdown (Val158Met) — research framing of “faster vs slower” COMT enzyme activity.",
       "notes": {
-        "GG": "Val/Val — faster COMT activity allele pair.",
-        "AG": "Val/Met — intermediate.",
-        "AA": "Met/Met — slower COMT activity allele pair.",
-        "CC": "Val/Val (C coding).",
-        "CT": "Val/Met.",
-        "TT": "Met/Met."
+        "GG": "Val/Val — often described as faster COMT activity.",
+        "AG": "Val/Met — intermediate COMT activity description.",
+        "AA": "Met/Met — often described as slower COMT activity.",
+        "CC": "Val/Val — often described as faster COMT activity.",
+        "CT": "Val/Met — intermediate COMT activity description.",
+        "TT": "Met/Met — often described as slower COMT activity."
       },
-      "source": "literature / SNPedia summaries"
+      "source": "literature summaries"
     },
     {
       "rsid": "rs762551",
       "gene": "CYP1A2",
       "category": "pharmacogenetics",
-      "summary": "Caffeine metabolism (CYP1A2*1F).",
+      "summary": "Caffeine metabolism — research labels of faster vs slower caffeine clearance (not a coffee prescription).",
       "notes": {
         "AA": "Often described as faster caffeine metabolism.",
-        "AC": "Intermediate.",
+        "AC": "Often described as intermediate caffeine metabolism.",
         "CC": "Often described as slower caffeine metabolism."
       },
       "source": "pharmacogenetics literature"
@@ -47,14 +47,14 @@
       "rsid": "rs4244285",
       "gene": "CYP2C19",
       "category": "pharmacogenetics",
-      "summary": "CYP2C19*2 — reduced-function allele for some drugs.",
+      "summary": "Drug-processing gene CYP2C19 (*2-related) — can matter for some medicines in clinic; this single SNP is only a hint, not a full PGx report.",
       "notes": {
-        "GG": "No *2 allele detected at this marker.",
-        "AG": "One *2 allele at this marker.",
-        "AA": "Two *2 alleles at this marker.",
-        "CC": "No *2 allele (C coding).",
-        "CT": "One *2 allele.",
-        "TT": "Two *2 alleles."
+        "GG": "No *2-style reduced-function allele at this marker.",
+        "AG": "One *2-style reduced-function allele — incomplete clinical picture alone.",
+        "AA": "Two *2-style alleles at this marker — still not prescribing guidance.",
+        "CC": "No *2-style reduced-function allele at this marker.",
+        "CT": "One *2-style reduced-function allele — incomplete clinical picture alone.",
+        "TT": "Two *2-style alleles at this marker — still not prescribing guidance."
       },
       "source": "pharmacogenetics literature"
     },
@@ -62,14 +62,14 @@
       "rsid": "rs1799853",
       "gene": "CYP2C9",
       "category": "pharmacogenetics",
-      "summary": "CYP2C9*2 — reduced-function allele.",
+      "summary": "Drug-processing gene CYP2C9 (*2) — studied for some medicines (e.g. warfarin-related pathways). Not dosing advice.",
       "notes": {
-        "CC": "No *2 allele at this marker.",
-        "CT": "One *2 allele.",
-        "TT": "Two *2 alleles.",
-        "GG": "No *2 allele (G coding).",
-        "AG": "One *2 allele.",
-        "AA": "Two *2 alleles."
+        "CC": "No *2 reduced-function allele at this marker.",
+        "CT": "One *2 allele — hint only; not a full clinical genotype.",
+        "TT": "Two *2 alleles at this marker — not prescribing guidance.",
+        "GG": "No *2 reduced-function allele at this marker.",
+        "AG": "One *2 allele — hint only; not a full clinical genotype.",
+        "AA": "Two *2 alleles at this marker — not prescribing guidance."
       },
       "source": "pharmacogenetics literature"
     },
@@ -77,11 +77,11 @@
       "rsid": "rs1057910",
       "gene": "CYP2C9",
       "category": "pharmacogenetics",
-      "summary": "CYP2C9*3 — reduced-function allele.",
+      "summary": "Drug-processing gene CYP2C9 (*3) — another reduced-function marker used in clinical PGx panels. Exploratory here.",
       "notes": {
-        "AA": "No *3 allele at this marker.",
-        "AC": "One *3 allele.",
-        "CC": "Two *3 alleles."
+        "AA": "No *3 reduced-function allele at this marker.",
+        "AC": "One *3 allele — hint only; not dosing advice.",
+        "CC": "Two *3 alleles at this marker — not prescribing guidance."
       },
       "source": "pharmacogenetics literature"
     },
@@ -89,11 +89,11 @@
       "rsid": "rs12248560",
       "gene": "CYP2C19",
       "category": "pharmacogenetics",
-      "summary": "CYP2C19*17 — increased-function allele.",
+      "summary": "CYP2C19 (*17) — often described as increased enzyme activity for some drugs. Not a reason to change medicines on your own.",
       "notes": {
-        "CC": "No *17 allele at this marker.",
-        "CT": "One *17 allele.",
-        "TT": "Two *17 alleles."
+        "CC": "No *17 increased-function allele at this marker.",
+        "CT": "One *17 allele — research/clinical hint only.",
+        "TT": "Two *17 alleles at this marker — not prescribing guidance."
       },
       "source": "pharmacogenetics literature"
     },
@@ -101,11 +101,11 @@
       "rsid": "rs9939609",
       "gene": "FTO",
       "category": "trait",
-      "summary": "FTO SNP associated with body-mass traits in population studies.",
+      "summary": "Body-mass research SNP — one of many variants linked to BMI in population studies. Does not predict your weight.",
       "notes": {
-        "TT": "Common allele pair at this site.",
-        "AT": "One copy of the A allele.",
-        "AA": "Two copies of the A allele."
+        "TT": "Common genotype at this FTO site.",
+        "AT": "One copy of the A allele studied in BMI research.",
+        "AA": "Two copies of the A allele studied in BMI research — still not destiny."
       },
       "source": "GWAS summaries"
     },
@@ -113,11 +113,11 @@
       "rsid": "rs7903146",
       "gene": "TCF7L2",
       "category": "trait",
-      "summary": "Widely studied type 2 diabetes risk SNP in Europeans.",
+      "summary": "Type 2 diabetes research SNP (especially studied in European ancestry). Not a diabetes diagnosis.",
       "notes": {
-        "CC": "Common allele pair at this site.",
-        "CT": "One copy of the T allele.",
-        "TT": "Two copies of the T allele."
+        "CC": "Common genotype at this site.",
+        "CT": "One copy of the T allele linked in diabetes GWAS.",
+        "TT": "Two copies of the T allele linked in diabetes GWAS — not a diagnosis."
       },
       "source": "GWAS summaries"
     },
@@ -125,26 +125,26 @@
       "rsid": "rs1800497",
       "gene": "ANKK1/DRD2",
       "category": "trait",
-      "summary": "Taq1A variant near dopamine receptor pathway genes.",
+      "summary": "Dopamine-pathway research variant (Taq1A) — studied with reward/behavior topics. Weak everyday meaning.",
       "notes": {
-        "GG": "A2/A2.",
-        "AG": "A1/A2.",
-        "AA": "A1/A1.",
-        "CC": "A2/A2 (C coding).",
-        "CT": "A1/A2.",
-        "TT": "A1/A1."
+        "GG": "A2/A2-style genotype (common labeling).",
+        "AG": "A1/A2-style heterozygous genotype.",
+        "AA": "A1/A1-style genotype.",
+        "CC": "A2/A2-style genotype (common labeling).",
+        "CT": "A1/A2-style heterozygous genotype.",
+        "TT": "A1/A1-style genotype."
       },
-      "source": "literature / SNPedia summaries"
+      "source": "literature summaries"
     },
     {
       "rsid": "rs429358",
       "gene": "APOE",
       "category": "trait",
-      "summary": "One of two SNPs used to define APOE ε alleles (with rs7412).",
+      "summary": "APOE ε helper SNP #1 (with rs7412) — used when naming ε2/ε3/ε4. One SNP alone is incomplete; not an Alzheimer’s diagnosis.",
       "notes": {
         "TT": "No ε4-defining allele at this marker.",
-        "CT": "One ε4-defining allele at this marker.",
-        "CC": "Two ε4-defining alleles at this marker."
+        "CT": "One ε4-defining allele at this marker — see also rs7412.",
+        "CC": "Two ε4-defining alleles at this marker — still not a clinical diagnosis."
       },
       "source": "literature"
     },
@@ -152,11 +152,11 @@
       "rsid": "rs7412",
       "gene": "APOE",
       "category": "trait",
-      "summary": "Second SNP used with rs429358 for APOE ε alleles.",
+      "summary": "APOE ε helper SNP #2 (with rs429358) — needed together to name ε alleles. Exploratory only.",
       "notes": {
-        "CC": "Common allele at this marker.",
-        "CT": "One T allele.",
-        "TT": "Two T alleles."
+        "CC": "Common allele at this APOE marker.",
+        "CT": "One T allele — interpret only together with rs429358.",
+        "TT": "Two T alleles — interpret only together with rs429358."
       },
       "source": "literature"
     },
@@ -164,11 +164,11 @@
       "rsid": "rs1805007",
       "gene": "MC1R",
       "category": "trait",
-      "summary": "MC1R variant associated with red hair / fair skin traits.",
+      "summary": "Red hair / fair skin tendency — MC1R variant often linked to freckling and red-hair traits.",
       "notes": {
-        "CC": "No R151C allele at this marker.",
-        "CT": "One copy.",
-        "TT": "Two copies."
+        "CC": "No R151C-style allele at this marker.",
+        "CT": "One copy — may contribute to fair-skin / red-hair tendency with other variants.",
+        "TT": "Two copies — stronger association with red-hair / fair-skin traits in research."
       },
       "source": "pigmentation genetics"
     },
@@ -176,10 +176,10 @@
       "rsid": "rs12913832",
       "gene": "HERC2",
       "category": "trait",
-      "summary": "Strongly associated with blue vs brown eye color in Europeans.",
+      "summary": "Eye color tendency (especially in European ancestry) — blue vs brown association, not a guarantee.",
       "notes": {
         "AA": "Often associated with brown eyes.",
-        "AG": "Intermediate / heterozygous.",
+        "AG": "Mixed / intermediate eye-color association.",
         "GG": "Often associated with blue eyes."
       },
       "source": "pigmentation genetics"
@@ -188,14 +188,14 @@
       "rsid": "rs4988235",
       "gene": "MCM6/LCT",
       "category": "trait",
-      "summary": "Lactase persistence (European-associated allele).",
+      "summary": "Adult lactose digestion (lactase persistence) — whether you tend to keep digesting milk sugar after childhood (European-associated allele).",
       "notes": {
-        "CC": "Likely lactase non-persistent allele pair.",
-        "CT": "One persistence allele.",
-        "TT": "Likely lactase persistent allele pair.",
-        "GG": "Likely non-persistent (G coding).",
-        "AG": "One persistence allele.",
-        "AA": "Likely persistent."
+        "CC": "Likely lactase non-persistent pattern at this marker (milk sugar may bother more people).",
+        "CT": "One persistence allele — often can digest some lactose.",
+        "TT": "Likely lactase persistent — adult milk-sugar digestion more likely.",
+        "GG": "Likely lactase non-persistent pattern at this marker.",
+        "AG": "One persistence allele — often can digest some lactose.",
+        "AA": "Likely lactase persistent — adult milk-sugar digestion more likely."
       },
       "source": "lactase persistence literature"
     },
@@ -203,11 +203,11 @@
       "rsid": "rs713598",
       "gene": "TAS2R38",
       "category": "trait",
-      "summary": "Bitter taste (PTC) sensitivity.",
+      "summary": "Bitter taste (PTC/PROP) — whether bitter compounds in some vegetables taste strong or weak to you.",
       "notes": {
-        "CC": "Often associated with tasting bitterness.",
-        "CG": "Intermediate.",
-        "GG": "Often associated with non-tasting."
+        "CC": "Often a “bitter taster” pattern.",
+        "CG": "Intermediate bitter-taste sensitivity.",
+        "GG": "Often a “non-taster” pattern for this bitter compound."
       },
       "source": "taste genetics"
     },
@@ -215,11 +215,11 @@
       "rsid": "rs1815739",
       "gene": "ACTN3",
       "category": "trait",
-      "summary": "Alpha-actinin-3 (R577X) — muscle fiber related.",
+      "summary": "Muscle fiber-related (R577X) — presence/absence of alpha-actinin-3; sports genetics love this SNP. Not a training plan.",
       "notes": {
-        "CC": "RR — functional ACTN3.",
-        "CT": "RX — one null allele.",
-        "TT": "XX — null/null."
+        "CC": "RR — functional ACTN3 protein present.",
+        "CT": "RX — one working and one null copy.",
+        "TT": "XX — no functional ACTN3 from this variant (common and compatible with health)."
       },
       "source": "sports genetics summaries"
     },
@@ -227,11 +227,11 @@
       "rsid": "rs53576",
       "gene": "OXTR",
       "category": "trait",
-      "summary": "Oxytocin receptor SNP studied in social-behavior research.",
+      "summary": "Oxytocin receptor research SNP — studied in social-behavior papers. Not a personality test.",
       "notes": {
-        "GG": "Common G/G genotype.",
-        "AG": "Heterozygous.",
-        "AA": "A/A genotype."
+        "GG": "Common G/G genotype in many studies.",
+        "AG": "Heterozygous OXTR genotype.",
+        "AA": "A/A genotype — research associations vary; weak everyday meaning."
       },
       "source": "behavioral genetics literature"
     },
@@ -239,11 +239,11 @@
       "rsid": "rs1801282",
       "gene": "PPARG",
       "category": "trait",
-      "summary": "Pro12Ala variant studied in metabolic traits.",
+      "summary": "Metabolic research variant (Pro12Ala) — studied with fat/glucose metabolism traits. Not a metabolic diagnosis.",
       "notes": {
-        "CC": "Pro/Pro.",
-        "CG": "Pro/Ala.",
-        "GG": "Ala/Ala."
+        "CC": "Pro/Pro — common amino-acid pair at this site.",
+        "CG": "Pro/Ala — one alanine copy studied in metabolic research.",
+        "GG": "Ala/Ala — two alanine copies at this site."
       },
       "source": "GWAS summaries"
     },
@@ -251,11 +251,11 @@
       "rsid": "rs1333049",
       "gene": "CDKN2B-AS1",
       "category": "trait",
-      "summary": "9p21 SNP studied in coronary disease GWAS.",
+      "summary": "Heart-disease research SNP (9p21) — population risk association only. Not a heart diagnosis.",
       "notes": {
-        "GG": "Common allele pair in many populations.",
-        "CG": "One C allele.",
-        "CC": "Two C alleles."
+        "GG": "Common genotype at this 9p21 marker.",
+        "CG": "One C allele linked in coronary GWAS.",
+        "CC": "Two C alleles linked in coronary GWAS — not a diagnosis."
       },
       "source": "GWAS summaries"
     },
@@ -263,38 +263,38 @@
       "rsid": "rs6025",
       "gene": "F5",
       "category": "trait",
-      "summary": "Factor V Leiden (R506Q) marker.",
+      "summary": "Factor V Leiden clotting marker — associated with higher clotting tendency in literature. Not a clinical thrombophilia report.",
       "notes": {
-        "GG": "No Leiden allele at this marker.",
-        "AG": "One Leiden allele.",
-        "AA": "Two Leiden alleles.",
-        "CC": "No Leiden allele (C coding).",
-        "CT": "One Leiden allele.",
-        "TT": "Two Leiden alleles."
+        "GG": "No Leiden allele called at this marker.",
+        "AG": "One Leiden allele — discuss with a clinician if you have clotting history; not a diagnosis here.",
+        "AA": "Two Leiden alleles — seek clinical confirmation; not a GenoLens diagnosis.",
+        "CC": "No Leiden allele called at this marker.",
+        "CT": "One Leiden allele — discuss with a clinician if relevant; not a diagnosis here.",
+        "TT": "Two Leiden alleles — seek clinical confirmation; not a GenoLens diagnosis."
       },
-      "source": "hematology / SNPedia summaries"
+      "source": "hematology literature"
     },
     {
       "rsid": "rs1799963",
       "gene": "F2",
       "category": "trait",
-      "summary": "Prothrombin G20210A marker.",
+      "summary": "Prothrombin (G20210A) clotting marker — another literature-linked clotting variant. Not a clinical lab report.",
       "notes": {
-        "GG": "No 20210A allele.",
-        "AG": "One A allele.",
-        "AA": "Two A alleles."
+        "GG": "No 20210A allele called.",
+        "AG": "One A allele — clinical context matters; not a diagnosis here.",
+        "AA": "Two A alleles — seek clinical confirmation; not a GenoLens diagnosis."
       },
-      "source": "hematology / SNPedia summaries"
+      "source": "hematology literature"
     },
     {
       "rsid": "rs1800566",
       "gene": "NQO1",
       "category": "metabolism",
-      "summary": "NQO1*2 — reduced enzyme activity allele.",
+      "summary": "Detox/antioxidant enzyme NQO1 (*2) — reduced activity allele in research. Weak everyday takeaway.",
       "notes": {
-        "CC": "No *2 allele.",
-        "CT": "One *2 allele.",
-        "TT": "Two *2 alleles."
+        "CC": "No *2 reduced-activity allele at this marker.",
+        "CT": "One *2 allele — research framing of lower NQO1 activity.",
+        "TT": "Two *2 alleles — research framing of lower NQO1 activity."
       },
       "source": "pharmacogenetics literature"
     },
@@ -302,11 +302,11 @@
       "rsid": "rs1042522",
       "gene": "TP53",
       "category": "trait",
-      "summary": "TP53 Pro72Arg polymorphism.",
+      "summary": "TP53 Pro72Arg — common coding polymorphism studied in many papers. Not a cancer test.",
       "notes": {
-        "GG": "Arg/Arg.",
-        "CG": "Pro/Arg.",
-        "CC": "Pro/Pro."
+        "GG": "Arg/Arg form at this site.",
+        "CG": "Pro/Arg heterozygous form.",
+        "CC": "Pro/Pro form at this site."
       },
       "source": "literature"
     },
@@ -314,14 +314,14 @@
       "rsid": "rs4880",
       "gene": "SOD2",
       "category": "metabolism",
-      "summary": "MnSOD Ala16Val variant.",
+      "summary": "Mitochondrial antioxidant enzyme (MnSOD Ala16Val) — research variant. Not an antioxidant prescription.",
       "notes": {
-        "AA": "Ala/Ala.",
-        "AG": "Ala/Val.",
-        "GG": "Val/Val.",
-        "TT": "Val/Val (T coding).",
-        "CT": "Ala/Val.",
-        "CC": "Ala/Ala."
+        "AA": "Ala/Ala form.",
+        "AG": "Ala/Val heterozygous form.",
+        "GG": "Val/Val form.",
+        "TT": "Val/Val form.",
+        "CT": "Ala/Val heterozygous form.",
+        "CC": "Ala/Ala form."
       },
       "source": "literature"
     },
@@ -329,11 +329,11 @@
       "rsid": "rs1695",
       "gene": "GSTP1",
       "category": "metabolism",
-      "summary": "GSTP1 Ile105Val.",
+      "summary": "Detox enzyme GSTP1 (Ile105Val) — studied with drug/toxin handling. Exploratory only.",
       "notes": {
-        "AA": "Ile/Ile.",
-        "AG": "Ile/Val.",
-        "GG": "Val/Val."
+        "AA": "Ile/Ile form.",
+        "AG": "Ile/Val heterozygous form.",
+        "GG": "Val/Val form."
       },
       "source": "pharmacogenetics literature"
     },
@@ -341,11 +341,11 @@
       "rsid": "rs1056836",
       "gene": "CYP1B1",
       "category": "pharmacogenetics",
-      "summary": "CYP1B1 Leu432Val.",
+      "summary": "Drug/hormone metabolism gene CYP1B1 (Leu432Val) — research variant. Not dosing advice.",
       "notes": {
-        "CC": "Leu/Leu.",
-        "CG": "Leu/Val.",
-        "GG": "Val/Val."
+        "CC": "Leu/Leu form.",
+        "CG": "Leu/Val heterozygous form.",
+        "GG": "Val/Val form."
       },
       "source": "pharmacogenetics literature"
     },
@@ -353,11 +353,11 @@
       "rsid": "rs1065852",
       "gene": "CYP2D6",
       "category": "pharmacogenetics",
-      "summary": "CYP2D6*10-related marker (chip coverage varies).",
+      "summary": "Drug-processing gene CYP2D6 (*10-related) — many antidepressants/pain meds use CYP2D6. Chips often miss copy-number; treat as a weak hint.",
       "notes": {
-        "CC": "No reduced-function allele at this marker.",
-        "CT": "One copy.",
-        "TT": "Two copies."
+        "CC": "No reduced-function allele called at this marker.",
+        "CT": "One copy at this marker — incomplete CYP2D6 picture.",
+        "TT": "Two copies at this marker — still not a full clinical CYP2D6 report."
       },
       "source": "pharmacogenetics literature"
     },
@@ -365,14 +365,14 @@
       "rsid": "rs3892097",
       "gene": "CYP2D6",
       "category": "pharmacogenetics",
-      "summary": "CYP2D6*4-related marker (chip coverage varies).",
+      "summary": "CYP2D6 (*4-related) — common reduced-function marker. Not enough alone for clinical star alleles.",
       "notes": {
         "CC": "No *4 allele at this marker.",
-        "CT": "One *4 allele.",
-        "TT": "Two *4 alleles.",
-        "GG": "No *4 allele (G coding).",
-        "AG": "One *4 allele.",
-        "AA": "Two *4 alleles."
+        "CT": "One *4-style allele — hint only.",
+        "TT": "Two *4-style alleles at this marker — not prescribing guidance.",
+        "GG": "No *4 allele at this marker.",
+        "AG": "One *4-style allele — hint only.",
+        "AA": "Two *4-style alleles at this marker — not prescribing guidance."
       },
       "source": "pharmacogenetics literature"
     },
@@ -380,26 +380,26 @@
       "rsid": "rs1801131",
       "gene": "MTHFR",
       "category": "metabolism",
-      "summary": "MTHFR A1298C.",
+      "summary": "Folate metabolism (A1298C) — second common MTHFR site people discuss. Not medical advice.",
       "notes": {
-        "AA": "Common allele pair.",
-        "AC": "One C allele.",
-        "CC": "Two C alleles.",
-        "TT": "Common (T coding).",
-        "GT": "One G allele.",
-        "GG": "Two G alleles."
+        "AA": "Usual genotype at A1298C.",
+        "AC": "One C allele — common; not a diagnosis.",
+        "CC": "Two C alleles — still not a reason to self-prescribe.",
+        "TT": "Usual genotype (alternate coding).",
+        "GT": "One alternate allele — common; not a diagnosis.",
+        "GG": "Two alternate alleles — still not medical advice."
       },
-      "source": "literature / SNPedia summaries"
+      "source": "literature summaries"
     },
     {
       "rsid": "rs17782313",
       "gene": "MC4R",
       "category": "trait",
-      "summary": "Near MC4R; studied for BMI association.",
+      "summary": "Near appetite/BMI gene MC4R — population BMI association. Does not determine your body size.",
       "notes": {
-        "TT": "Common allele pair.",
-        "CT": "One C allele.",
-        "CC": "Two C alleles."
+        "TT": "Common genotype at this site.",
+        "CT": "One C allele studied in BMI research.",
+        "CC": "Two C alleles studied in BMI research — not destiny."
       },
       "source": "GWAS summaries"
     },
@@ -407,10 +407,10 @@
       "rsid": "rs1426654",
       "gene": "SLC24A5",
       "category": "trait",
-      "summary": "Skin pigmentation SNP (Ala111Thr).",
+      "summary": "Skin pigmentation tendency — strongly associated with lighter vs darker skin in ancestry research.",
       "notes": {
         "AA": "Often associated with lighter pigmentation.",
-        "AG": "Heterozygous.",
+        "AG": "Mixed pigmentation association.",
         "GG": "Often associated with darker pigmentation."
       },
       "source": "pigmentation genetics"
@@ -419,10 +419,10 @@
       "rsid": "rs16891982",
       "gene": "SLC45A2",
       "category": "trait",
-      "summary": "Skin/hair pigmentation SNP.",
+      "summary": "Skin/hair pigmentation tendency — another common ancestry-linked pigmentation SNP.",
       "notes": {
         "GG": "Often associated with lighter pigmentation.",
-        "CG": "Heterozygous.",
+        "CG": "Mixed pigmentation association.",
         "CC": "Often associated with darker pigmentation."
       },
       "source": "pigmentation genetics"
@@ -431,10 +431,10 @@
       "rsid": "rs17822931",
       "gene": "ABCC11",
       "category": "trait",
-      "summary": "Dry vs wet earwax / body odor related variant.",
+      "summary": "Earwax type (and related body-odor chemistry) — dry vs wet earwax is a classic clear trait.",
       "notes": {
         "CC": "Often wet earwax type.",
-        "CT": "Heterozygous.",
+        "CT": "Mixed / heterozygous pattern.",
         "TT": "Often dry earwax type."
       },
       "source": "literature"
@@ -443,11 +443,11 @@
       "rsid": "rs671",
       "gene": "ALDH2",
       "category": "metabolism",
-      "summary": "ALDH2*2 — alcohol flush reaction allele (East Asian-enriched).",
+      "summary": "Alcohol flush (ALDH2*2) — reduced aldehyde breakdown; flush/redness after alcohol is more common with this allele (East Asian-enriched).",
       "notes": {
-        "GG": "No *2 allele.",
-        "AG": "One *2 allele.",
-        "AA": "Two *2 alleles."
+        "GG": "No ALDH2*2 flush allele called.",
+        "AG": "One *2 allele — alcohol flush is more common; not medical advice.",
+        "AA": "Two *2 alleles — stronger flush association in research."
       },
       "source": "pharmacogenetics literature"
     },
@@ -455,14 +455,14 @@
       "rsid": "rs1229984",
       "gene": "ADH1B",
       "category": "metabolism",
-      "summary": "ADH1B alcohol metabolism variant.",
+      "summary": "Alcohol breakdown (ADH1B) — how quickly alcohol is converted in the first step. Exploratory.",
       "notes": {
-        "CC": "Common allele pair in many populations.",
-        "CT": "One T allele.",
-        "TT": "Two T alleles.",
-        "GG": "Common (G coding).",
-        "AG": "One A allele.",
-        "AA": "Two A alleles."
+        "CC": "Common genotype in many populations.",
+        "CT": "One faster-metabolism-style allele in research labeling.",
+        "TT": "Two copies of the research “faster” allele.",
+        "GG": "Common genotype (alternate coding).",
+        "AG": "One alternate allele in research labeling.",
+        "AA": "Two alternate alleles in research labeling."
       },
       "source": "pharmacogenetics literature"
     },
@@ -470,11 +470,11 @@
       "rsid": "rs1800460",
       "gene": "TPMT",
       "category": "pharmacogenetics",
-      "summary": "TPMT reduced-function marker (coverage varies by chip).",
+      "summary": "TPMT — important in clinic for some thiopurine drugs. Chip coverage varies; never change those medicines from this app.",
       "notes": {
-        "GG": "No reduced-function allele at this marker.",
-        "AG": "One copy.",
-        "AA": "Two copies."
+        "GG": "No reduced-function allele called at this marker.",
+        "AG": "One reduced-function-style copy — clinical TPMT testing is different.",
+        "AA": "Two copies at this marker — seek proper clinical testing if relevant."
       },
       "source": "pharmacogenetics literature"
     },
@@ -482,11 +482,11 @@
       "rsid": "rs4149056",
       "gene": "SLCO1B1",
       "category": "pharmacogenetics",
-      "summary": "SLCO1B1*5-related marker (statin myopathy studies).",
+      "summary": "Statin transport (SLCO1B1*5-related) — studied with muscle side-effect risk on some statins. Not a reason to stop medicine without a clinician.",
       "notes": {
-        "TT": "No *5 allele at this marker.",
-        "CT": "One *5 allele.",
-        "CC": "Two *5 alleles."
+        "TT": "No *5-style allele at this marker.",
+        "CT": "One *5-style allele — discussed in statin myopathy research.",
+        "CC": "Two *5-style alleles — discuss only with a clinician; not advice to stop drugs."
       },
       "source": "pharmacogenetics literature"
     },
@@ -494,11 +494,11 @@
       "rsid": "rs1799971",
       "gene": "OPRM1",
       "category": "pharmacogenetics",
-      "summary": "OPRM1 A118G (Asn40Asp).",
+      "summary": "Opioid receptor (A118G) — studied for pain/opioid response research. Not pain-management guidance.",
       "notes": {
-        "AA": "Asn/Asn.",
-        "AG": "Asn/Asp.",
-        "GG": "Asp/Asp."
+        "AA": "Asn/Asn form (common labeling).",
+        "AG": "Asn/Asp heterozygous form.",
+        "GG": "Asp/Asp form."
       },
       "source": "pharmacogenetics literature"
     },
@@ -506,11 +506,11 @@
       "rsid": "rs6265",
       "gene": "BDNF",
       "category": "trait",
-      "summary": "BDNF Val66Met.",
+      "summary": "Brain growth-factor variant (Val66Met) — neuroscience research SNP. Not a mood or IQ test.",
       "notes": {
-        "GG": "Val/Val.",
-        "AG": "Val/Met.",
-        "AA": "Met/Met."
+        "GG": "Val/Val form.",
+        "AG": "Val/Met heterozygous form.",
+        "AA": "Met/Met form."
       },
       "source": "neuroscience literature"
     },
@@ -518,11 +518,11 @@
       "rsid": "rs1801260",
       "gene": "CLOCK",
       "category": "wellness",
-      "summary": "Circadian CLOCK variant (exploratory sleep-adjacent).",
+      "summary": "Body-clock / circadian research SNP — sleep-timing studies only. Not a sleep disorder result.",
       "notes": {
         "TT": "Common CLOCK genotype on this panel.",
-        "CT": "Heterozygous CLOCK genotype (exploratory).",
-        "CC": "Alternate CLOCK genotype (exploratory)."
+        "CT": "Heterozygous CLOCK genotype — exploratory sleep-rhythm research.",
+        "CC": "Alternate CLOCK genotype — exploratory only."
       },
       "source": "circadian genetics literature"
     },
@@ -530,23 +530,23 @@
       "rsid": "rs113993960",
       "gene": "CFTR",
       "category": "carrier",
-      "summary": "CFTR F508del proxy marker — exploratory carrier-style note only.",
+      "summary": "Cystic fibrosis–related marker (F508del-style) — exploratory carrier-style note. DTC chips are not a clinical carrier test.",
       "notes": {
-        "II": "Insertion/insertion call on chip (not a diagnosis).",
-        "DI": "Heterozygous-style call — not a clinical carrier report.",
-        "DD": "Deletion-style call — seek clinical testing; not a diagnosis."
+        "II": "No deletion-style call at this marker (chip labeling).",
+        "DI": "Heterozygous-style call — not a clinical carrier report; confirm in a lab if needed.",
+        "DD": "Deletion-style call — seek clinical testing; GenoLens is not a diagnosis."
       },
-      "source": "ClinVar / cystic fibrosis literature (redistributable rsID list)"
+      "source": "ClinVar / cystic fibrosis literature"
     },
     {
       "rsid": "rs1800562",
       "gene": "HFE",
       "category": "carrier",
-      "summary": "HFE C282Y — hereditary hemochromatosis-associated variant (exploratory).",
+      "summary": "Hereditary hemochromatosis–associated (C282Y) — iron-overload risk in literature. Not a diagnosis; clinical testing needed for decisions.",
       "notes": {
-        "GG": "No C282Y allele called (exploratory).",
-        "AG": "One C282Y allele called — not a diagnosis; clinical testing required for decisions.",
-        "AA": "Two C282Y alleles called — not a diagnosis; speak with a clinician."
+        "GG": "No C282Y allele called.",
+        "AG": "One C282Y allele — carrier-style finding in literature; not a GenoLens diagnosis.",
+        "AA": "Two C282Y alleles — speak with a clinician; not a diagnosis from this app."
       },
       "source": "ClinVar / hemochromatosis literature"
     },
@@ -554,11 +554,11 @@
       "rsid": "rs334",
       "gene": "HBB",
       "category": "carrier",
-      "summary": "HBB sickle-cell associated variant (exploratory; often absent on DTC chips).",
+      "summary": "Sickle-cell–associated HBB marker — often missing on DTC chips. Never a clinical sickle-cell or carrier report.",
       "notes": {
-        "AA": "No sickle allele called on this file (exploratory).",
-        "AT": "Heterozygous-style call — not a clinical sickle-cell report.",
-        "TT": "Homozygous-style call — seek clinical confirmation; not a diagnosis."
+        "AA": "No sickle-style allele called on this file.",
+        "AT": "Heterozygous-style call — confirm clinically if relevant; not a diagnosis here.",
+        "TT": "Homozygous-style call — seek clinical confirmation immediately if relevant."
       },
       "source": "ClinVar / hemoglobinopathy literature"
     }
