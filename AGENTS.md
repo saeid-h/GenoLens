@@ -70,14 +70,15 @@ Single source of rules for every coding agent in this repository. Pointer files
 
 ## Releases and versioning
 
-- **Baseline release is `v0.0.0`.** Package / API version strings track that
-  (currently `0.0.0`). A release means an annotated git tag `v0.0.0` (and later
-  `v0.0.1`, `v0.1.0`, …) created only when the owner explicitly asks.
-- **Status today:** Baseline **`v0.0.0` is released** (annotated tag + GitHub
-  Release). Package / API version strings are `0.0.0`.
-- **New features** start from the `v0.0.0` baseline (branch from the tag or from
-  `main` at that tag) unless the owner directs otherwise. Prefer small,
-  reviewable slices; do not treat every `main` tip commit as a new release.
+- **Baseline release is `v0.0.0`.** Later patches use annotated tags (`v0.0.1`,
+  `v0.1.0`, …) created only when the owner explicitly asks. Package / API
+  version strings track the latest such release.
+- **Status today:** Baseline **`v0.0.0`** and patch **`v0.0.1`** are the
+  release line; package / API version strings are `0.0.1` once that tag exists.
+- **New features** start from the latest baseline/tag on `main` (branch from
+  the tag or from `main` at that commit) unless the owner directs otherwise.
+  Prefer small, reviewable slices; do not treat every `main` tip commit as a
+  new release.
 - Never invent release tags or GitHub Releases without explicit owner consent.
   Pushing tags counts as a push — still requires explicit consent.
 

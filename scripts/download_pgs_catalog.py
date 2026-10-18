@@ -97,7 +97,7 @@ def _fetch(url: str, timeout: int = 90, retries: int = 6) -> bytes:
         try:
             req = Request(
                 url,
-                headers={"User-Agent": "GenoLens-local/0.0.0 (research; no genome upload)"},
+                headers={"User-Agent": "GenoLens-local/0.0.1 (research; no genome upload)"},
             )
             with urlopen(req, timeout=timeout) as resp:
                 return resp.read()
