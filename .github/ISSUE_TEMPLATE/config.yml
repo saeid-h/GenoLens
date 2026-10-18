@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/saeid-h/GenoLens/tree/main/docs
+    about: Architecture, API, privacy limits, and development guides.
+  - name: Security advisories
+    url: https://github.com/saeid-h/GenoLens/security/advisories/new
+    about: Report vulnerabilities privately (do not attach genotype data).
