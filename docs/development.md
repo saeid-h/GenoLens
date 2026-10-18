@@ -32,11 +32,12 @@ Pointers: `CLAUDE.md`, `.cursorrules` → `AGENTS.md` only.
 
 ## Releases
 
-- Package version is **`0.0.0`** until the owner cuts the first release tag
-  **`v0.0.0`**. That tag does not exist yet.
-- **Do not start new features** until `v0.0.0` is released. Pre-release work is
-  limited to finishing the current shippable slice, fixes, docs, and tests.
-- After `v0.0.0`, branch new features from that baseline. See `AGENTS.md`.
+- Baseline tag **`v0.0.0`** is released. Package / API version strings track the
+  latest release (currently **`0.0.1`** / **`v0.0.1`** once that tag is cut).
+- Branch new work from `main` (or the latest release tag). Prefer small,
+  reviewable slices. See `AGENTS.md`.
+- Never invent release tags or GitHub Releases without explicit owner consent.
+  Pushing tags counts as a push.
 
 ## Python workflow
 
